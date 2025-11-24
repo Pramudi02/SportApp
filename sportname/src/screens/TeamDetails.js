@@ -35,12 +35,17 @@ export default function TeamDetails({ route, navigation }) {
       onPress={() => navigation.navigate('PlayerDetails', { playerId: item.idPlayer })}
       activeOpacity={0.7}
     >
-      {item.strThumb && (
+      {item.strThumb ? (
         <Image
           source={{ uri: item.strThumb }}
           style={styles.playerImage}
           resizeMode="cover"
+          onError={(error) => console.log('Player image load error:', error.nativeEvent.error)}
         />
+      ) : (
+        <View style={[styles.playerImagePlaceholder, { backgroundColor: theme.colors.cardLight }]}>
+          <MaterialIcons name="person" size={30} color={theme.colors.textSecondary} />
+        </View>
       )}
       <View style={styles.playerInfo}>
         <Text style={[styles.playerName, { color: theme.colors.text }]} numberOfLines={1}>
@@ -79,12 +84,17 @@ export default function TeamDetails({ route, navigation }) {
         end={{ x: 1, y: 1 }}
         style={styles.header}
       >
-        {currentTeam.strTeamBadge && (
+        {currentTeam.strTeamBadge ? (
           <Image
             source={{ uri: currentTeam.strTeamBadge }}
             style={styles.teamBadge}
             resizeMode="contain"
+            onError={(error) => console.log('Team badge load error:', error.nativeEvent.error)}
           />
+        ) : (
+          <View style={[styles.teamBadgePlaceholder, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
+            <MaterialIcons name="shield" size={60} color="#fff" />
+          </View>
         )}
         <Text style={styles.teamName}>{currentTeam.strTeam}</Text>
         {currentTeam.intFormedYear && (
@@ -169,6 +179,14 @@ const styles = StyleSheet.create({
     width: 110,
     height: 110,
     marginBottom: 20,
+  },
+  teamBadgePlaceholder: {
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   teamName: {
     fontSize: 28,
@@ -261,6 +279,14 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     marginRight: 12,
+  },
+  playerImagePlaceholder: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   playerInfo: {
     flex: 1,

@@ -13,6 +13,7 @@ import { fetchTeamsByLeague } from '../redux/slices/footballSlice';
 import { darkTheme } from '../theme/dark';
 import { lightTheme } from '../theme/light';
 import { LinearGradient } from 'expo-linear-gradient';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function LeagueDetails({ route, navigation }) {
   const { leagueId } = route.params;
@@ -38,12 +39,17 @@ export default function LeagueDetails({ route, navigation }) {
         end={{ x: 1, y: 1 }}
         style={styles.gradientOverlay}
       />
-      {item.strTeamBadge && (
+      {item.strTeamBadge ? (
         <Image
           source={{ uri: item.strTeamBadge }}
           style={styles.teamBadge}
           resizeMode="contain"
+          onError={(error) => console.log('Image load error:', error.nativeEvent.error)}
         />
+      ) : (
+        <View style={[styles.teamBadgePlaceholder, { backgroundColor: theme.colors.cardLight }]}>
+          <MaterialIcons name="shield" size={40} color={theme.colors.textSecondary} />
+        </View>
       )}
       <View style={styles.cardInfo}>
         <Text style={[styles.teamName, { color: theme.colors.text }]} numberOfLines={2}>
@@ -51,7 +57,7 @@ export default function LeagueDetails({ route, navigation }) {
         </Text>
         {item.strStadium && (
           <Text style={[styles.stadium, { color: theme.colors.textSecondary }]} numberOfLines={1}>
-            {item.strStadium}
+            <MaterialIcons name="stadium" size={12} color={theme.colors.textSecondary} /> {item.strStadium}
           </Text>
         )}
       </View>
@@ -126,6 +132,14 @@ const styles = StyleSheet.create({
   teamBadge: {
     width: 70,
     height: 70,
+    marginBottom: 12,
+  },
+  teamBadgePlaceholder: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 12,
   },
   cardInfo: {

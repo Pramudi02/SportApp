@@ -62,12 +62,17 @@ export default function PlayerDetails({ route }) {
         style={styles.header}
       >
         <View style={styles.headerContent}>
-          {currentPlayer.strThumb && (
+          {currentPlayer.strThumb ? (
             <Image
               source={{ uri: currentPlayer.strThumb }}
               style={styles.playerImage}
               resizeMode="cover"
+              onError={(error) => console.log('Player image load error:', error.nativeEvent.error)}
             />
+          ) : (
+            <View style={[styles.playerImagePlaceholder, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
+              <MaterialIcons name="person" size={50} color="#fff" />
+            </View>
           )}
           <View style={styles.headerInfo}>
             <Text style={styles.playerName}>{currentPlayer.strPlayer}</Text>
@@ -171,6 +176,15 @@ const styles = StyleSheet.create({
     borderRadius: 45,
     borderWidth: 3,
     borderColor: '#FFFFFF',
+  },
+  playerImagePlaceholder: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    borderWidth: 3,
+    borderColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerInfo: {
     flex: 1,
