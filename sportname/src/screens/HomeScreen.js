@@ -61,6 +61,63 @@ export default function HomeScreen({ navigation }) {
     setRefreshing(false);
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    
+    if (diffHours < 1) {
+      const diffMins = Math.floor(diffMs / (1000 * 60));
+      return `${diffMins}m ago`;
+    } else if (diffHours < 24) {
+      return `${diffHours}h ago`;
+    } else {
+      const diffDays = Math.floor(diffHours / 24);
+      return `${diffDays}d ago`;
+    }
+  };
+
+  const openArticle = (url) => {
+    Linking.openURL(url).catch(err => console.error('Error opening article:', err));
+  };
+
+  const renderNewsCard = ({ item, index }) => {
+    if (index >= 3) return null; // Only show first 3 news items
+    
+    return (
+      <TouchableOpacity
+        style={[styles.newsCard, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}
+        onPress={() => openArticle(item.url)}
+        activeOpacity={0.7}
+      >
+        {item.urlToImage && (
+          <Image
+            source={{ uri: item.urlToImage }}
+            style={styles.newsImage}
+            resizeMode="cover"
+          />
+        )}
+        <View style={styles.newsContent}>
+          <View style={styles.newsHeader}>
+            <Text style={[styles.newsSource, { color: theme.colors.primary }]} numberOfLines={1}>
+              {item.source.name}
+            </Text>
+            <Text style={[styles.newsDate, { color: theme.colors.textSecondary }]}>
+              {formatDate(item.publishedAt)}
+            </Text>
+          </View>
+          <Text style={[styles.newsTitle, { color: theme.colors.text }]} numberOfLines={2}>
+            {item.title}
+          </Text>
+          <Text style={[styles.newsDescription, { color: theme.colors.textSecondary }]} numberOfLines={2}>
+            {item.description}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   const renderLeagueCard = ({ item }) => (
     <TouchableOpacity
       style={[styles.card, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}
@@ -90,11 +147,11 @@ export default function HomeScreen({ navigation }) {
     </TouchableOpacity>
   );
 
-  if (loading && leagues.length === 0) {
+  if (loading && leagues.length === 0 && newsLoading) {
     return (
       <View style={[styles.centerContainer, { backgroundColor: theme.colors.background }]}>
         <ActivityIndicator size="large" color={theme.colors.primary} />
-        <Text style={[styles.loadingText, { color: theme.colors.textSecondary }]}>Loading leagues...</Text>
+        <Text style={[styles.loadingText, { color: theme.colors.textSecondary }]}>Loading...</Text>
       </View>
     );
   }
@@ -109,15 +166,40 @@ export default function HomeScreen({ navigation }) {
       >
         <Text style={styles.headerTitle}>FootyScope</Text>
         <Text style={styles.headerSubtitle}>
-          Explore leagues and discover players worldwide
+          Your ultimate football companion
         </Text>
+        
+        {/* Toggle Buttons */}
+        <View style={styles.tabContainer}>
+          <TouchableOpacity
+            style={[
+              styles.tabButton,
+              activeTab === 'news' && styles.tabButtonActive,
+              { backgroundColor: activeTab === 'news' ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)' }
+            ]}
+            onPress={() => setActiveTab('news')}
+            activeOpacity={0.7}
+          >
+            <MaterialIcons name="newspaper" size={20} color="#FFFFFF" />
+            <Text style={styles.tabButtonText}>Top News</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity
+            style={[
+              styles.tabButton,
+              activeTab === 'leagues' && styles.tabButtonActive,
+              { backgroundColor: activeTab === 'leagues' ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)' }
+            ]}
+            onPress={() => setActiveTab('leagues')}
+            activeOpacity={0.7}
+          >
+            <MaterialIcons name="emoji-events" size={20} color="#FFFFFF" />
+            <Text style={styles.tabButtonText}>Upcoming Leagues</Text>
+          </TouchableOpacity>
+        </View>
       </LinearGradient>
 
-      <FlatList
-        data={leagues}
-        keyExtractor={(item) => item.idLeague}
-        renderItem={renderLeagueCard}
-        contentContainerStyle={styles.listContent}
+      <ScrollView
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -126,12 +208,63 @@ export default function HomeScreen({ navigation }) {
             colors={[theme.colors.primary]}
           />
         }
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text style={[styles.emptyText, { color: theme.colors.textSecondary }]}>No leagues available</Text>
+      >
+        {activeTab === 'news' ? (
+          <View style={styles.contentContainer}>
+            <View style={styles.sectionHeader}>
+              <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Latest News</Text>
+            </View>
+            
+            {newsLoading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color={theme.colors.primary} />
+              </View>
+            ) : (
+              <>
+                <FlatList
+                  data={news.slice(0, 3)}
+                  keyExtractor={(item, index) => `news-${index}`}
+                  renderItem={renderNewsCard}
+                  scrollEnabled={false}
+                />
+                
+                <TouchableOpacity
+                  style={[styles.viewMoreButton, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}
+                  onPress={() => {/* Navigate to full news screen */}}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.viewMoreText, { color: theme.colors.primary }]}>View More News</Text>
+                  <MaterialIcons name="arrow-forward" size={20} color={theme.colors.primary} />
+                </TouchableOpacity>
+              </>
+            )}
           </View>
-        }
-      />
+        ) : (
+          <View style={styles.contentContainer}>
+            <View style={styles.sectionHeader}>
+              <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Football Leagues</Text>
+            </View>
+            
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color={theme.colors.primary} />
+              </View>
+            ) : (
+              <FlatList
+                data={leagues}
+                keyExtractor={(item) => item.idLeague}
+                renderItem={renderLeagueCard}
+                scrollEnabled={false}
+                ListEmptyComponent={
+                  <View style={styles.emptyContainer}>
+                    <Text style={[styles.emptyText, { color: theme.colors.textSecondary }]}>No leagues available</Text>
+                  </View>
+                }
+              />
+            )}
+          </View>
+        )}
+      </ScrollView>
     </View>
   );
 }
@@ -152,7 +285,7 @@ const styles = StyleSheet.create({
   header: {
     padding: 20,
     paddingTop: 60,
-    paddingBottom: 30,
+    paddingBottom: 20,
   },
   headerTitle: {
     fontSize: 32,
@@ -164,10 +297,110 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#FFFFFF',
     opacity: 0.9,
+    marginBottom: 20,
   },
-  listContent: {
+  tabContainer: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  tabButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    gap: 8,
+  },
+  tabButtonActive: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  tabButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  contentContainer: {
     padding: 16,
     paddingBottom: 30,
+  },
+  sectionHeader: {
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+  },
+  loadingContainer: {
+    padding: 40,
+    alignItems: 'center',
+  },
+  newsCard: {
+    borderRadius: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  newsImage: {
+    width: '100%',
+    height: 200,
+    backgroundColor: '#E0E0E0',
+  },
+  newsContent: {
+    padding: 16,
+  },
+  newsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  newsSource: {
+    fontSize: 12,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+  },
+  newsDate: {
+    fontSize: 12,
+  },
+  newsTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    lineHeight: 24,
+  },
+  newsDescription: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  viewMoreButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginTop: 8,
+    gap: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  viewMoreText: {
+    fontSize: 16,
+    fontWeight: '600',
   },
   card: {
     borderRadius: 16,
