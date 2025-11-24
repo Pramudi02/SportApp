@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Image,
+  TextInput,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { searchPlayers } from '../api/footballApi';
@@ -17,7 +18,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 export default function SearchScreen({ navigation }) {
   const [players, setPlayers] = useState([]);
+  const [filteredPlayers, setFilteredPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   const { isDarkMode } = useSelector((state) => state.theme);
 
   const theme = isDarkMode ? darkTheme : lightTheme;
@@ -48,11 +51,41 @@ export default function SearchScreen({ navigation }) {
       );
       
       setPlayers(uniquePlayers);
+      setFilteredPlayers(uniquePlayers);
     } catch (error) {
       console.error('Error loading players:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+    
+    if (text.trim() === '') {
+      setFilteredPlayers(players);
+      return;
+    }
+
+    const query = text.toLowerCase().trim();
+    const filtered = players.filter((player) => {
+      const playerName = player.strPlayer?.toLowerCase() || '';
+      const nationality = player.strNationality?.toLowerCase() || '';
+      const team = player.strTeam?.toLowerCase() || '';
+      
+      return (
+        playerName.includes(query) ||
+        nationality.includes(query) ||
+        team.includes(query)
+      );
+    });
+    
+    setFilteredPlayers(filtered);
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+    setFilteredPlayers(players);
   };
 
   const renderPlayerCard = ({ item }) => (
@@ -134,8 +167,25 @@ export default function SearchScreen({ navigation }) {
         </Text>
       </LinearGradient>
 
+      <View style={[styles.searchContainer, { backgroundColor: theme.colors.card }]}>
+        <MaterialIcons name="search" size={20} color={theme.colors.textSecondary} style={styles.searchIcon} />
+        <TextInput
+          style={[styles.searchInput, { color: theme.colors.text }]}
+          placeholder="Search by name, country, or team..."
+          placeholderTextColor={theme.colors.textSecondary}
+          value={searchQuery}
+          onChangeText={handleSearch}
+          autoCorrect={false}
+        />
+        {searchQuery.length > 0 && (
+          <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
+            <MaterialIcons name="close" size={20} color={theme.colors.textSecondary} />
+          </TouchableOpacity>
+        )}
+      </View>
+
       <FlatList
-        data={players}
+        data={filteredPlayers}
         renderItem={renderPlayerCard}
         keyExtractor={(item) => item.idPlayer}
         contentContainerStyle={styles.listContainer}
@@ -144,8 +194,13 @@ export default function SearchScreen({ navigation }) {
           <View style={styles.emptyContainer}>
             <MaterialIcons name="search-off" size={64} color={theme.colors.textSecondary} />
             <Text style={[styles.emptyText, { color: theme.colors.textSecondary }]}>
-              No players found
+              {searchQuery.trim() ? 'No players found matching your search' : 'No players found'}
             </Text>
+            {searchQuery.trim() && (
+              <Text style={[styles.emptySubtext, { color: theme.colors.textSecondary }]}>
+                Try a different search term
+              </Text>
+            )}
           </View>
         }
       />
@@ -182,6 +237,31 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.8)',
     marginTop: 4,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 16,
+    marginBottom: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  searchIcon: {
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 15,
+    paddingVertical: 4,
+  },
+  clearButton: {
+    padding: 4,
   },
   listContainer: {
     padding: 16,
@@ -248,5 +328,10 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 16,
     marginTop: 16,
+  },
+  emptySubtext: {
+    fontSize: 14,
+    marginTop: 8,
+    opacity: 0.7,
   },
 });
