@@ -12,12 +12,19 @@ import {
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../redux/slices/authSlice';
+import { darkTheme } from '../theme/dark';
+import { lightTheme } from '../theme/light';
+import { LinearGradient } from 'expo-linear-gradient';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.auth);
+  const { isDarkMode } = useSelector((state) => state.theme);
+
+  const theme = isDarkMode ? darkTheme : lightTheme;
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -36,58 +43,80 @@ export default function LoginScreen({ navigation }) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       <View style={styles.content}>
-        <Text style={styles.title}>FootyScope</Text>
-        <Text style={styles.subtitle}>Football Explorer</Text>
+        <LinearGradient
+          colors={[theme.colors.gradient1, theme.colors.gradient2]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.logoContainer}
+        >
+          <MaterialIcons name="sports-soccer" size={60} color="#FFFFFF" />
+        </LinearGradient>
+        
+        <Text style={[styles.title, { color: theme.colors.text }]}>FootyScope</Text>
+        <Text style={[styles.subtitle, { color: theme.colors.primary }]}>Football Explorer</Text>
 
         <View style={styles.form}>
-          <TextInput
-            style={styles.input}
-            placeholder="Username"
-            placeholderTextColor="#999"
-            value={username}
-            onChangeText={setUsername}
-            autoCapitalize="none"
-          />
+          <View style={[styles.inputContainer, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
+            <MaterialIcons name="person" size={20} color={theme.colors.textSecondary} />
+            <TextInput
+              style={[styles.input, { color: theme.colors.text }]}
+              placeholder="Username"
+              placeholderTextColor={theme.colors.textSecondary}
+              value={username}
+              onChangeText={setUsername}
+              autoCapitalize="none"
+            />
+          </View>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor="#999"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
+          <View style={[styles.inputContainer, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
+            <MaterialIcons name="lock" size={20} color={theme.colors.textSecondary} />
+            <TextInput
+              style={[styles.input, { color: theme.colors.text }]}
+              placeholder="Password"
+              placeholderTextColor={theme.colors.textSecondary}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+            />
+          </View>
 
-          {error && <Text style={styles.errorText}>{error}</Text>}
+          {error && <Text style={[styles.errorText, { color: theme.colors.error }]}>{error}</Text>}
 
           <TouchableOpacity
-            style={[styles.button, loading && styles.buttonDisabled]}
             onPress={handleLogin}
             disabled={loading}
+            activeOpacity={0.8}
           >
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.buttonText}>Login</Text>
-            )}
+            <LinearGradient
+              colors={[theme.colors.gradient1, theme.colors.gradient2]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={[styles.button, loading && styles.buttonDisabled]}
+            >
+              {loading ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <Text style={styles.buttonText}>Login</Text>
+              )}
+            </LinearGradient>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.linkButton}
             onPress={() => navigation.navigate('Register')}
           >
-            <Text style={styles.linkText}>
-              Don't have an account? Register
+            <Text style={[styles.linkText, { color: theme.colors.primary }]}>
+              Don't have an account? <Text style={{ fontWeight: 'bold' }}>Register</Text>
             </Text>
           </TouchableOpacity>
 
-          <View style={styles.demoContainer}>
-            <Text style={styles.demoText}>Demo credentials:</Text>
-            <Text style={styles.demoText}>Username: emilys</Text>
-            <Text style={styles.demoText}>Password: emilyspass</Text>
+          <View style={[styles.demoContainer, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
+            <MaterialIcons name="info" size={20} color={theme.colors.info} style={{ marginBottom: 8 }} />
+            <Text style={[styles.demoText, { color: theme.colors.textSecondary }]}>Demo credentials:</Text>
+            <Text style={[styles.demoText, { color: theme.colors.text, fontWeight: '600' }]}>emilys / emilyspass</Text>
           </View>
         </View>
       </View>
@@ -98,79 +127,105 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a1929',
   },
   content: {
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
   },
+  logoContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginBottom: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+    elevation: 10,
+  },
   title: {
-    fontSize: 36,
+    fontSize: 38,
     fontWeight: 'bold',
-    color: '#fff',
     textAlign: 'center',
     marginBottom: 8,
   },
   subtitle: {
-    fontSize: 18,
-    color: '#64b5f6',
+    fontSize: 16,
     textAlign: 'center',
     marginBottom: 48,
+    fontWeight: '600',
   },
   form: {
     width: '100%',
   },
-  input: {
-    backgroundColor: '#1e293b',
-    borderRadius: 8,
-    padding: 16,
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 12,
+    paddingHorizontal: 16,
     marginBottom: 16,
-    fontSize: 16,
-    color: '#fff',
     borderWidth: 1,
-    borderColor: '#334155',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  input: {
+    flex: 1,
+    padding: 16,
+    fontSize: 16,
+    marginLeft: 12,
   },
   button: {
-    backgroundColor: '#2196f3',
-    borderRadius: 8,
-    padding: 16,
+    borderRadius: 12,
+    padding: 18,
     alignItems: 'center',
     marginTop: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   buttonDisabled: {
     opacity: 0.6,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 16,
+    color: '#FFFFFF',
+    fontSize: 17,
     fontWeight: 'bold',
   },
   linkButton: {
-    marginTop: 16,
+    marginTop: 20,
     alignItems: 'center',
   },
   linkText: {
-    color: '#64b5f6',
     fontSize: 14,
   },
   errorText: {
-    color: '#ef5350',
     fontSize: 14,
     marginBottom: 8,
     textAlign: 'center',
   },
   demoContainer: {
-    marginTop: 32,
-    padding: 16,
-    backgroundColor: '#1e293b',
-    borderRadius: 8,
+    marginTop: 40,
+    padding: 20,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#334155',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
   demoText: {
-    color: '#94a3b8',
-    fontSize: 12,
+    fontSize: 13,
     textAlign: 'center',
     marginBottom: 4,
   },

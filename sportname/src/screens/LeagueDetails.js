@@ -10,11 +10,17 @@ import {
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTeamsByLeague } from '../redux/slices/footballSlice';
+import { darkTheme } from '../theme/dark';
+import { lightTheme } from '../theme/light';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function LeagueDetails({ route, navigation }) {
   const { leagueId } = route.params;
   const dispatch = useDispatch();
   const { teams, loading } = useSelector((state) => state.football);
+  const { isDarkMode } = useSelector((state) => state.theme);
+
+  const theme = isDarkMode ? darkTheme : lightTheme;
 
   useEffect(() => {
     dispatch(fetchTeamsByLeague(leagueId));
@@ -22,9 +28,16 @@ export default function LeagueDetails({ route, navigation }) {
 
   const renderTeamCard = ({ item }) => (
     <TouchableOpacity
-      style={styles.card}
+      style={[styles.card, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}
       onPress={() => navigation.navigate('TeamDetails', { teamId: item.idTeam })}
+      activeOpacity={0.7}
     >
+      <LinearGradient
+        colors={[theme.colors.gradient1 + '10', theme.colors.gradient2 + '05']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.gradientOverlay}
+      />
       {item.strTeamBadge && (
         <Image
           source={{ uri: item.strTeamBadge }}
@@ -33,12 +46,12 @@ export default function LeagueDetails({ route, navigation }) {
         />
       )}
       <View style={styles.cardInfo}>
-        <Text style={styles.teamName} numberOfLines={2}>
+        <Text style={[styles.teamName, { color: theme.colors.text }]} numberOfLines={2}>
           {item.strTeam}
         </Text>
         {item.strStadium && (
-          <Text style={styles.stadium} numberOfLines={1}>
-            🏟️ {item.strStadium}
+          <Text style={[styles.stadium, { color: theme.colors.textSecondary }]} numberOfLines={1}>
+            {item.strStadium}
           </Text>
         )}
       </View>
@@ -47,15 +60,15 @@ export default function LeagueDetails({ route, navigation }) {
 
   if (loading) {
     return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#2196f3" />
-        <Text style={styles.loadingText}>Loading teams...</Text>
+      <View style={[styles.centerContainer, { backgroundColor: theme.colors.background }]}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+        <Text style={[styles.loadingText, { color: theme.colors.textSecondary }]}>Loading teams...</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <FlatList
         data={teams}
         keyExtractor={(item) => item.idTeam}
@@ -64,7 +77,7 @@ export default function LeagueDetails({ route, navigation }) {
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No teams found for this league</Text>
+            <Text style={[styles.emptyText, { color: theme.colors.textSecondary }]}>No teams found for this league</Text>
           </View>
         }
       />
@@ -75,16 +88,13 @@ export default function LeagueDetails({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a1929',
   },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#0a1929',
   },
   loadingText: {
-    color: '#94a3b8',
     marginTop: 12,
     fontSize: 14,
   },
@@ -93,18 +103,29 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    backgroundColor: '#1e293b',
-    borderRadius: 12,
+    borderRadius: 16,
     margin: 6,
     padding: 16,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#334155',
     minHeight: 180,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  gradientOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   teamBadge: {
-    width: 64,
-    height: 64,
+    width: 70,
+    height: 70,
     marginBottom: 12,
   },
   cardInfo: {
@@ -112,15 +133,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   teamName: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '600',
-    color: '#fff',
     textAlign: 'center',
     marginBottom: 6,
   },
   stadium: {
     fontSize: 12,
-    color: '#94a3b8',
     textAlign: 'center',
   },
   emptyContainer: {
@@ -130,7 +149,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   emptyText: {
-    color: '#94a3b8',
     fontSize: 16,
     textAlign: 'center',
   },

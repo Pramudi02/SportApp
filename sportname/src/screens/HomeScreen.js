@@ -8,68 +8,110 @@ import {
   ActivityIndicator,
   RefreshControl,
   Image,
+  ScrollView,
+  Linking,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchLeagues } from '../redux/slices/footballSlice';
+import { darkTheme } from '../theme/dark';
+import { lightTheme } from '../theme/light';
+import { LinearGradient } from 'expo-linear-gradient';
+import { MaterialIcons } from '@expo/vector-icons';
+import { getFootballNews } from '../api/newsApi';
 
 export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
   const { leagues, loading } = useSelector((state) => state.football);
+  const { isDarkMode } = useSelector((state) => state.theme);
   const [refreshing, setRefreshing] = useState(false);
+  const [activeTab, setActiveTab] = useState('news'); // 'news' or 'leagues'
+  const [news, setNews] = useState([]);
+  const [newsLoading, setNewsLoading] = useState(false);
+
+  const theme = isDarkMode ? darkTheme : lightTheme;
 
   useEffect(() => {
     loadLeagues();
+    loadNews();
   }, []);
 
   const loadLeagues = () => {
     dispatch(fetchLeagues());
   };
 
+  const loadNews = async () => {
+    setNewsLoading(true);
+    try {
+      const articles = await getFootballNews(10);
+      setNews(articles);
+    } catch (error) {
+      console.error('Error loading news:', error);
+    } finally {
+      setNewsLoading(false);
+    }
+  };
+
   const onRefresh = async () => {
     setRefreshing(true);
-    await loadLeagues();
+    if (activeTab === 'news') {
+      await loadNews();
+    } else {
+      await loadLeagues();
+    }
     setRefreshing(false);
   };
 
   const renderLeagueCard = ({ item }) => (
     <TouchableOpacity
-      style={styles.card}
+      style={[styles.card, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}
       onPress={() => navigation.navigate('LeagueDetails', { leagueId: item.idLeague })}
+      activeOpacity={0.7}
     >
+      <LinearGradient
+        colors={[theme.colors.gradient1 + '20', theme.colors.gradient2 + '10']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.gradientOverlay}
+      />
       <View style={styles.cardContent}>
-        <View style={styles.iconContainer}>
-          <Text style={styles.iconText}>⚽</Text>
+        <View style={[styles.iconContainer, { backgroundColor: theme.colors.primary + '20' }]}>
+          <MaterialIcons name="sports-soccer" size={28} color={theme.colors.primary} />
         </View>
         <View style={styles.cardInfo}>
-          <Text style={styles.leagueName} numberOfLines={1}>
+          <Text style={[styles.leagueName, { color: theme.colors.text }]} numberOfLines={1}>
             {item.strLeague}
           </Text>
-          <Text style={styles.leagueCountry} numberOfLines={1}>
+          <Text style={[styles.leagueCountry, { color: theme.colors.textSecondary }]} numberOfLines={1}>
             {item.strCountry || 'International'}
           </Text>
         </View>
-        <Text style={styles.arrow}>›</Text>
+        <MaterialIcons name="chevron-right" size={24} color={theme.colors.primary} />
       </View>
     </TouchableOpacity>
   );
 
   if (loading && leagues.length === 0) {
     return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#2196f3" />
-        <Text style={styles.loadingText}>Loading leagues...</Text>
+      <View style={[styles.centerContainer, { backgroundColor: theme.colors.background }]}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+        <Text style={[styles.loadingText, { color: theme.colors.textSecondary }]}>Loading leagues...</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Football Leagues</Text>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <LinearGradient
+        colors={[theme.colors.gradient1, theme.colors.gradient2]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.header}
+      >
+        <Text style={styles.headerTitle}>FootyScope</Text>
         <Text style={styles.headerSubtitle}>
-          Explore teams and players worldwide
+          Explore leagues and discover players worldwide
         </Text>
-      </View>
+      </LinearGradient>
 
       <FlatList
         data={leagues}
@@ -80,13 +122,13 @@ export default function HomeScreen({ navigation }) {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor="#2196f3"
-            colors={['#2196f3']}
+            tintColor={theme.colors.primary}
+            colors={[theme.colors.primary]}
           />
         }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No leagues available</Text>
+            <Text style={[styles.emptyText, { color: theme.colors.textSecondary }]}>No leagues available</Text>
           </View>
         }
       />
@@ -97,43 +139,53 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a1929',
   },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#0a1929',
   },
   loadingText: {
-    color: '#94a3b8',
     marginTop: 12,
     fontSize: 14,
   },
   header: {
     padding: 20,
     paddingTop: 60,
-    backgroundColor: '#0f2744',
+    paddingBottom: 30,
   },
   headerTitle: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 4,
+    color: '#FFFFFF',
+    marginBottom: 6,
   },
   headerSubtitle: {
     fontSize: 14,
-    color: '#94a3b8',
+    color: '#FFFFFF',
+    opacity: 0.9,
   },
   listContent: {
     padding: 16,
+    paddingBottom: 30,
   },
   card: {
-    backgroundColor: '#1e293b',
-    borderRadius: 12,
-    marginBottom: 12,
+    borderRadius: 16,
+    marginBottom: 14,
     borderWidth: 1,
-    borderColor: '#334155',
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  gradientOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   cardContent: {
     flexDirection: 'row',
@@ -141,41 +193,29 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   iconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#0f2744',
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
-  },
-  iconText: {
-    fontSize: 24,
+    marginRight: 14,
   },
   cardInfo: {
     flex: 1,
   },
   leagueName: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '600',
-    color: '#fff',
     marginBottom: 4,
   },
   leagueCountry: {
-    fontSize: 14,
-    color: '#94a3b8',
-  },
-  arrow: {
-    fontSize: 24,
-    color: '#64b5f6',
-    marginLeft: 8,
+    fontSize: 13,
   },
   emptyContainer: {
     padding: 40,
     alignItems: 'center',
   },
   emptyText: {
-    color: '#94a3b8',
     fontSize: 16,
   },
 });
