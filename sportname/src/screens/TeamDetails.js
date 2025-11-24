@@ -11,11 +11,18 @@ import {
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTeamDetails, fetchPlayersByTeam } from '../redux/slices/footballSlice';
+import { darkTheme } from '../theme/dark';
+import { lightTheme } from '../theme/light';
+import { LinearGradient } from 'expo-linear-gradient';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function TeamDetails({ route, navigation }) {
   const { teamId } = route.params;
   const dispatch = useDispatch();
   const { currentTeam, players, loading } = useSelector((state) => state.football);
+  const { isDarkMode } = useSelector((state) => state.theme);
+
+  const theme = isDarkMode ? darkTheme : lightTheme;
 
   useEffect(() => {
     dispatch(fetchTeamDetails(teamId));
@@ -24,8 +31,9 @@ export default function TeamDetails({ route, navigation }) {
 
   const renderPlayerCard = ({ item }) => (
     <TouchableOpacity
-      style={styles.playerCard}
+      style={[styles.playerCard, { backgroundColor: theme.colors.cardLight, borderColor: theme.colors.border }]}
       onPress={() => navigation.navigate('PlayerDetails', { playerId: item.idPlayer })}
+      activeOpacity={0.7}
     >
       {item.strThumb && (
         <Image
@@ -35,36 +43,42 @@ export default function TeamDetails({ route, navigation }) {
         />
       )}
       <View style={styles.playerInfo}>
-        <Text style={styles.playerName} numberOfLines={1}>
+        <Text style={[styles.playerName, { color: theme.colors.text }]} numberOfLines={1}>
           {item.strPlayer}
         </Text>
-        <Text style={styles.playerPosition} numberOfLines={1}>
+        <Text style={[styles.playerPosition, { color: theme.colors.primary }]} numberOfLines={1}>
           {item.strPosition || 'Player'}
         </Text>
       </View>
+      <MaterialIcons name="chevron-right" size={20} color={theme.colors.textSecondary} />
     </TouchableOpacity>
   );
 
   if (loading && !currentTeam) {
     return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#2196f3" />
-        <Text style={styles.loadingText}>Loading team details...</Text>
+      <View style={[styles.centerContainer, { backgroundColor: theme.colors.background }]}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+        <Text style={[styles.loadingText, { color: theme.colors.textSecondary }]}>Loading team details...</Text>
       </View>
     );
   }
 
   if (!currentTeam) {
     return (
-      <View style={styles.centerContainer}>
-        <Text style={styles.errorText}>Team not found</Text>
+      <View style={[styles.centerContainer, { backgroundColor: theme.colors.background }]}>
+        <Text style={[styles.errorText, { color: theme.colors.error }]}>Team not found</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
+    <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <LinearGradient
+        colors={[theme.colors.gradient1, theme.colors.gradient2]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.header}
+      >
         {currentTeam.strTeamBadge && (
           <Image
             source={{ uri: currentTeam.strTeamBadge }}
@@ -78,40 +92,43 @@ export default function TeamDetails({ route, navigation }) {
             Founded: {currentTeam.intFormedYear}
           </Text>
         )}
-      </View>
+      </LinearGradient>
 
-      <View style={styles.infoSection}>
+      <View style={[styles.infoSection, { backgroundColor: theme.colors.card }]}>
         {currentTeam.strStadium && (
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Stadium:</Text>
-            <Text style={styles.infoValue}>{currentTeam.strStadium}</Text>
+            <MaterialIcons name="stadium" size={20} color={theme.colors.primary} />
+            <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Stadium:</Text>
+            <Text style={[styles.infoValue, { color: theme.colors.text }]}>{currentTeam.strStadium}</Text>
           </View>
         )}
         {currentTeam.strLocation && (
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Location:</Text>
-            <Text style={styles.infoValue}>{currentTeam.strLocation}</Text>
+            <MaterialIcons name="location-on" size={20} color={theme.colors.primary} />
+            <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Location:</Text>
+            <Text style={[styles.infoValue, { color: theme.colors.text }]}>{currentTeam.strLocation}</Text>
           </View>
         )}
         {currentTeam.strLeague && (
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>League:</Text>
-            <Text style={styles.infoValue}>{currentTeam.strLeague}</Text>
+          <View style={[styles.infoRow, { borderBottomWidth: 0 }]}>
+            <MaterialIcons name="emoji-events" size={20} color={theme.colors.primary} />
+            <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>League:</Text>
+            <Text style={[styles.infoValue, { color: theme.colors.text }]}>{currentTeam.strLeague}</Text>
           </View>
         )}
       </View>
 
       {currentTeam.strDescriptionEN && (
-        <View style={styles.descriptionSection}>
-          <Text style={styles.sectionTitle}>About</Text>
-          <Text style={styles.description} numberOfLines={6}>
+        <View style={[styles.descriptionSection, { backgroundColor: theme.colors.card }]}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>About</Text>
+          <Text style={[styles.description, { color: theme.colors.textSecondary }]} numberOfLines={6}>
             {currentTeam.strDescriptionEN}
           </Text>
         </View>
       )}
 
-      <View style={styles.playersSection}>
-        <Text style={styles.sectionTitle}>Players</Text>
+      <View style={[styles.playersSection, { backgroundColor: theme.colors.card }]}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Players</Text>
         {players.length > 0 ? (
           <FlatList
             data={players}
@@ -120,7 +137,7 @@ export default function TeamDetails({ route, navigation }) {
             scrollEnabled={false}
           />
         ) : (
-          <Text style={styles.noPlayersText}>No players available</Text>
+          <Text style={[styles.noPlayersText, { color: theme.colors.textSecondary }]}>No players available</Text>
         )}
       </View>
     </ScrollView>
@@ -130,119 +147,136 @@ export default function TeamDetails({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a1929',
   },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#0a1929',
   },
   loadingText: {
-    color: '#94a3b8',
     marginTop: 12,
     fontSize: 14,
   },
   errorText: {
-    color: '#ef5350',
     fontSize: 16,
   },
   header: {
     alignItems: 'center',
-    padding: 24,
-    backgroundColor: '#0f2744',
+    padding: 32,
+    paddingTop: 20,
   },
   teamBadge: {
-    width: 100,
-    height: 100,
-    marginBottom: 16,
+    width: 110,
+    height: 110,
+    marginBottom: 20,
   },
   teamName: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#FFFFFF',
     textAlign: 'center',
     marginBottom: 8,
   },
   formedYear: {
     fontSize: 14,
-    color: '#94a3b8',
+    color: '#FFFFFF',
+    opacity: 0.9,
   },
   infoSection: {
     padding: 20,
-    backgroundColor: '#1e293b',
-    marginTop: 1,
+    marginTop: 8,
+    marginHorizontal: 16,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   infoRow: {
     flexDirection: 'row',
-    marginBottom: 12,
+    alignItems: 'center',
+    marginBottom: 14,
+    paddingBottom: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.05)',
   },
   infoLabel: {
     fontSize: 14,
-    color: '#94a3b8',
-    width: 100,
+    marginLeft: 12,
+    width: 90,
   },
   infoValue: {
     flex: 1,
-    fontSize: 14,
-    color: '#fff',
-    fontWeight: '500',
+    fontSize: 15,
+    fontWeight: '600',
   },
   descriptionSection: {
     padding: 20,
-    backgroundColor: '#1e293b',
-    marginTop: 1,
+    marginTop: 8,
+    marginHorizontal: 16,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
     marginBottom: 12,
   },
   description: {
     fontSize: 14,
-    color: '#cbd5e1',
     lineHeight: 22,
   },
   playersSection: {
     padding: 20,
-    backgroundColor: '#1e293b',
-    marginTop: 1,
+    marginTop: 8,
+    marginHorizontal: 16,
     marginBottom: 20,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   playerCard: {
     flexDirection: 'row',
-    backgroundColor: '#0a1929',
-    borderRadius: 8,
+    borderRadius: 12,
     padding: 12,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#334155',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
   },
   playerImage: {
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#334155',
+    marginRight: 12,
   },
   playerInfo: {
     flex: 1,
-    marginLeft: 12,
-    justifyContent: 'center',
   },
   playerName: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#fff',
     marginBottom: 4,
   },
   playerPosition: {
-    fontSize: 14,
-    color: '#94a3b8',
+    fontSize: 13,
+    fontWeight: '500',
   },
   noPlayersText: {
-    color: '#94a3b8',
     textAlign: 'center',
     padding: 20,
+    fontSize: 14,
   },
 });

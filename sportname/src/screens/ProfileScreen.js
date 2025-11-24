@@ -11,11 +11,17 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../redux/slices/authSlice';
 import { toggleTheme } from '../redux/slices/themeSlice';
+import { darkTheme } from '../theme/dark';
+import { lightTheme } from '../theme/light';
+import { LinearGradient } from 'expo-linear-gradient';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function ProfileScreen() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { isDarkMode } = useSelector((state) => state.theme);
+
+  const theme = isDarkMode ? darkTheme : lightTheme;
 
   const handleLogout = () => {
     Alert.alert(
@@ -43,8 +49,13 @@ export default function ProfileScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
+    <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <LinearGradient
+        colors={[theme.colors.gradient1, theme.colors.gradient2]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.header}
+      >
         <View style={styles.avatarContainer}>
           <Text style={styles.avatarText}>
             {user?.firstName?.charAt(0) || user?.username?.charAt(0) || 'U'}
@@ -58,56 +69,66 @@ export default function ProfileScreen() {
         {user?.email && (
           <Text style={styles.email}>{user.email}</Text>
         )}
-      </View>
+      </LinearGradient>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Account Information</Text>
+        <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Account Information</Text>
 
-        <View style={styles.infoCard}>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Username</Text>
-            <Text style={styles.infoValue}>{user?.username || 'N/A'}</Text>
+        <View style={[styles.infoCard, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
+          <View style={[styles.infoRow, { borderBottomColor: theme.colors.border }]}>
+            <MaterialIcons name="person" size={20} color={theme.colors.primary} />
+            <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Username</Text>
+            <Text style={[styles.infoValue, { color: theme.colors.text }]}>{user?.username || 'N/A'}</Text>
           </View>
 
           {user?.email && (
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Email</Text>
-              <Text style={styles.infoValue}>{user.email}</Text>
+            <View style={[styles.infoRow, { borderBottomColor: theme.colors.border }]}>
+              <MaterialIcons name="email" size={20} color={theme.colors.primary} />
+              <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Email</Text>
+              <Text style={[styles.infoValue, { color: theme.colors.text }]}>{user.email}</Text>
             </View>
           )}
 
           {user?.gender && (
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Gender</Text>
-              <Text style={styles.infoValue}>{user.gender}</Text>
+            <View style={[styles.infoRow, { borderBottomColor: theme.colors.border }]}>
+              <MaterialIcons name="wc" size={20} color={theme.colors.primary} />
+              <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Gender</Text>
+              <Text style={[styles.infoValue, { color: theme.colors.text }]}>{user.gender}</Text>
             </View>
           )}
 
           {user?.age && (
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Age</Text>
-              <Text style={styles.infoValue}>{user.age}</Text>
+            <View style={[styles.infoRow, { borderBottomColor: 'transparent' }]}>
+              <MaterialIcons name="cake" size={20} color={theme.colors.primary} />
+              <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Age</Text>
+              <Text style={[styles.infoValue, { color: theme.colors.text }]}>{user.age}</Text>
             </View>
           )}
         </View>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Appearance</Text>
+        <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Appearance</Text>
 
-        <View style={styles.infoCard}>
+        <View style={[styles.infoCard, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
           <View style={styles.settingRow}>
+            <View style={styles.settingIconContainer}>
+              <MaterialIcons name={isDarkMode ? 'dark-mode' : 'light-mode'} size={24} color={theme.colors.primary} />
+            </View>
             <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>Dark Mode</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
+                {isDarkMode ? 'Dark Mode' : 'Light Mode'}
+              </Text>
+              <Text style={[styles.settingDescription, { color: theme.colors.textSecondary }]}>
                 {isDarkMode ? 'Dark theme enabled' : 'Light theme enabled'}
               </Text>
             </View>
             <Switch
               value={isDarkMode}
               onValueChange={handleToggleTheme}
-              trackColor={{ false: '#767577', true: '#2196f3' }}
-              thumbColor={isDarkMode ? '#fff' : '#f4f3f4'}
+              trackColor={{ false: theme.colors.border, true: theme.colors.primary + '80' }}
+              thumbColor={isDarkMode ? theme.colors.primary : '#f4f3f4'}
+              ios_backgroundColor={theme.colors.border}
             />
           </View>
         </View>
@@ -115,15 +136,23 @@ export default function ProfileScreen() {
 
       <View style={styles.section}>
         <TouchableOpacity
-          style={styles.logoutButton}
           onPress={handleLogout}
+          activeOpacity={0.8}
         >
-          <Text style={styles.logoutButtonText}>Logout</Text>
+          <LinearGradient
+            colors={['#FF5A5F', '#FF3B3F']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.logoutButton}
+          >
+            <MaterialIcons name="logout" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
+            <Text style={styles.logoutButtonText}>Logout</Text>
+          </LinearGradient>
         </TouchableOpacity>
       </View>
 
       <View style={styles.footer}>
-        <Text style={styles.footerText}>FootyScope v1.0.0</Text>
+        <Text style={[styles.footerText, { color: theme.colors.textSecondary }]}>FootyScope v1.0.0</Text>
       </View>
     </ScrollView>
   );
@@ -132,106 +161,126 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a1929',
   },
   header: {
     alignItems: 'center',
     padding: 32,
-    backgroundColor: '#0f2744',
+    paddingTop: 60,
+    paddingBottom: 40,
   },
   avatarContainer: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#2196f3',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
+    borderWidth: 3,
+    borderColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+    elevation: 10,
   },
   avatarText: {
-    fontSize: 40,
+    fontSize: 42,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#FFFFFF',
   },
   name: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 4,
+    color: '#FFFFFF',
+    marginBottom: 6,
   },
   email: {
     fontSize: 14,
-    color: '#94a3b8',
+    color: '#FFFFFF',
+    opacity: 0.9,
   },
   section: {
     padding: 20,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
     marginBottom: 12,
   },
   infoCard: {
-    backgroundColor: '#1e293b',
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#334155',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   infoRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 12,
+    alignItems: 'center',
+    paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: '#334155',
   },
   infoLabel: {
     fontSize: 14,
-    color: '#94a3b8',
+    marginLeft: 12,
+    flex: 1,
   },
   infoValue: {
-    fontSize: 14,
-    color: '#fff',
-    fontWeight: '500',
+    fontSize: 15,
+    fontWeight: '600',
   },
   settingRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 8,
+  },
+  settingIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
   },
   settingInfo: {
     flex: 1,
   },
   settingLabel: {
-    fontSize: 16,
-    color: '#fff',
-    fontWeight: '500',
+    fontSize: 17,
+    fontWeight: '600',
     marginBottom: 4,
   },
   settingDescription: {
-    fontSize: 12,
-    color: '#94a3b8',
+    fontSize: 13,
   },
   logoutButton: {
-    backgroundColor: '#ef5350',
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: 16,
+    padding: 18,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   logoutButtonText: {
-    color: '#fff',
-    fontSize: 16,
+    color: '#FFFFFF',
+    fontSize: 17,
     fontWeight: 'bold',
   },
   footer: {
     alignItems: 'center',
     padding: 20,
     marginTop: 20,
+    marginBottom: 30,
   },
   footerText: {
     fontSize: 12,
-    color: '#64748b',
   },
 });
