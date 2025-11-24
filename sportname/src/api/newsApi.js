@@ -1,8 +1,58 @@
 import axios from 'axios';
 
-// NewsAPI endpoint for football news
-const NEWS_API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your NewsAPI key
-const BASE_URL = 'https://newsapi.org/v2/everything';
+// Mock football news data with real Unsplash images (no API key required)
+const getMockNews = () => {
+  return [
+    {
+      title: 'Champions League Quarter-Finals Draw Completed',
+      description: 'The UEFA Champions League quarter-finals draw has been completed with some exciting matchups set to take place next month.',
+      urlToImage: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&h=400&fit=crop',
+      source: { name: 'Football Today' },
+      publishedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      url: 'https://example.com/news/1',
+    },
+    {
+      title: 'Premier League Top Scorer Race Heats Up',
+      description: 'The race for the Premier League Golden Boot is intensifying as the season enters its final stretch with multiple players in contention.',
+      urlToImage: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=400&fit=crop',
+      source: { name: 'Sports Weekly' },
+      publishedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+      url: 'https://example.com/news/2',
+    },
+    {
+      title: 'World Cup Qualifiers: Upsets and Surprises',
+      description: 'Several unexpected results in the World Cup qualifying rounds have shaken up the standings and put traditional powerhouses under pressure.',
+      urlToImage: 'https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=800&h=400&fit=crop',
+      source: { name: 'Global Football' },
+      publishedAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
+      url: 'https://example.com/news/3',
+    },
+    {
+      title: 'Transfer Window: Big Money Moves Expected',
+      description: 'With the transfer window approaching, several top clubs are preparing record-breaking bids for star players across Europe.',
+      urlToImage: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&h=400&fit=crop',
+      source: { name: 'Transfer News' },
+      publishedAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+      url: 'https://example.com/news/4',
+    },
+    {
+      title: 'Young Talent Shines in International Debut',
+      description: 'A promising young player made an impressive debut for their national team, showcasing skills that have caught the attention of top scouts.',
+      urlToImage: 'https://images.unsplash.com/photo-1606925797300-0b35e9d1794e?w=800&h=400&fit=crop',
+      source: { name: 'Youth Football' },
+      publishedAt: new Date(Date.now() - 18 * 60 * 60 * 1000).toISOString(),
+      url: 'https://example.com/news/5',
+    },
+    {
+      title: 'Tactical Analysis: Evolution of Modern Football',
+      description: 'How modern tactics and formations are changing the beautiful game with emphasis on pressing and possession-based football.',
+      urlToImage: 'https://images.unsplash.com/photo-1589487391730-58f20eb2c308?w=800&h=400&fit=crop',
+      source: { name: 'Football Analytics' },
+      publishedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      url: 'https://example.com/news/6',
+    },
+  ];
+};
 
 /**
  * Get latest football news
@@ -11,51 +61,23 @@ const BASE_URL = 'https://newsapi.org/v2/everything';
  */
 export const getFootballNews = async (pageSize = 10) => {
   try {
-    const response = await axios.get(BASE_URL, {
-      params: {
-        q: 'football OR soccer',
-        language: 'en',
-        sortBy: 'publishedAt',
-        pageSize: pageSize,
-        apiKey: NEWS_API_KEY,
-      },
-    });
-    return response.data.articles || [];
+    // For production: Add your NewsAPI key here
+    // const NEWS_API_KEY = 'YOUR_API_KEY_HERE';
+    // const response = await axios.get('https://newsapi.org/v2/everything', {
+    //   params: {
+    //     q: 'football OR soccer',
+    //     language: 'en',
+    //     sortBy: 'publishedAt',
+    //     pageSize: pageSize,
+    //     apiKey: NEWS_API_KEY,
+    //   },
+    // });
+    // return response.data.articles || [];
+
+    // Using mock data (works without API key)
+    return getMockNews().slice(0, pageSize);
   } catch (error) {
     console.error('Failed to fetch news:', error);
-    // Return mock data if API fails (for development)
-    return getMockNews();
+    return getMockNews().slice(0, pageSize);
   }
-};
-
-/**
- * Mock news data for development/fallback
- */
-const getMockNews = () => {
-  return [
-    {
-      title: 'Champions League: Exciting Match Results',
-      description: 'Latest updates from the UEFA Champions League matches with spectacular goals and dramatic finishes.',
-      urlToImage: 'https://via.placeholder.com/400x200?text=Football+News+1',
-      source: { name: 'Football Daily' },
-      publishedAt: new Date().toISOString(),
-      url: 'https://example.com/news1',
-    },
-    {
-      title: 'Premier League Transfer News',
-      description: 'Breaking news on the latest transfer deals and rumors across Premier League clubs.',
-      urlToImage: 'https://via.placeholder.com/400x200?text=Football+News+2',
-      source: { name: 'Sky Sports' },
-      publishedAt: new Date(Date.now() - 3600000).toISOString(),
-      url: 'https://example.com/news2',
-    },
-    {
-      title: 'World Cup Qualifiers Update',
-      description: 'National teams battle it out in intense World Cup qualification matches around the globe.',
-      urlToImage: 'https://via.placeholder.com/400x200?text=Football+News+3',
-      source: { name: 'ESPN FC' },
-      publishedAt: new Date(Date.now() - 7200000).toISOString(),
-      url: 'https://example.com/news3',
-    },
-  ];
 };

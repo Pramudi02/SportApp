@@ -91,12 +91,16 @@ export default function HomeScreen({ navigation }) {
         onPress={() => openArticle(item.url)}
         activeOpacity={0.7}
       >
-        {item.urlToImage && (
+        {item.urlToImage ? (
           <Image
             source={{ uri: item.urlToImage }}
             style={styles.newsImage}
             resizeMode="cover"
           />
+        ) : (
+          <View style={[styles.newsImagePlaceholder, { backgroundColor: theme.colors.cardLight }]}>
+            <MaterialIcons name="sports-soccer" size={48} color={theme.colors.textSecondary} />
+          </View>
         )}
         <View style={styles.newsContent}>
           <View style={styles.newsHeader}>
@@ -355,6 +359,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 200,
     backgroundColor: '#E0E0E0',
+  },
+  newsImagePlaceholder: {
+    width: '100%',
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   newsContent: {
     padding: 16,
