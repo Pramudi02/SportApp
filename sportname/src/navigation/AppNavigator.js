@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSelector, useDispatch } from 'react-redux';
-import { Text } from 'react-native';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { checkAuthStatus } from '../redux/slices/authSlice';
 import { loadFavoritesFromStorage } from '../redux/slices/favoriteSlice';
+import { loadThemeFromStorage } from '../redux/slices/themeSlice';
 
 // Screens
 import LoginScreen from '../screens/LoginScreen';
@@ -14,6 +15,7 @@ import LeagueDetails from '../screens/LeagueDetails';
 import TeamDetails from '../screens/TeamDetails';
 import PlayerDetails from '../screens/PlayerDetails';
 import FavoritesScreen from '../screens/FavoritesScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -89,8 +91,10 @@ function MainTabs() {
         name="HomeTab"
         component={HomeStack}
         options={{
-          tabBarLabel: 'Explore',
-          tabBarIcon: ({ color }) => <TabIcon name="⚽" color={color} />,
+          tabBarLabel: 'Home',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="home" size={size} color={color} />
+          ),
         }}
       />
       <Tab.Screen
@@ -98,7 +102,9 @@ function MainTabs() {
         component={FavoritesScreen}
         options={{
           tabBarLabel: 'Favorites',
-          tabBarIcon: ({ color }) => <TabIcon name="★" color={color} />,
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="star" size={size} color={color} />
+          ),
           headerShown: true,
           headerStyle: {
             backgroundColor: '#0f2744',
@@ -110,16 +116,26 @@ function MainTabs() {
           headerTitle: 'Favorites',
         }}
       />
+      <Tab.Screen
+        name="ProfileTab"
+        component={ProfileScreen}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="person" size={size} color={color} />
+          ),
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: '#0f2744',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerTitle: 'Profile',
+        }}
+      />
     </Tab.Navigator>
-  );
-}
-
-// Simple tab icon component
-function TabIcon({ name, color }) {
-  return (
-    <Text style={{ fontSize: 24, color }}>
-      {name}
-    </Text>
   );
 }
 
@@ -133,6 +149,8 @@ export default function AppNavigator() {
     dispatch(checkAuthStatus());
     // Load favorites from storage
     dispatch(loadFavoritesFromStorage());
+    // Load theme preference from storage
+    dispatch(loadThemeFromStorage());
   }, [dispatch]);
 
   return isAuthenticated ? <MainTabs /> : <AuthStack />;
