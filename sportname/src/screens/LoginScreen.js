@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../redux/slices/authSlice';
@@ -41,11 +42,17 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    <ImageBackground
+      source={{ uri: 'https://ik.imagekit.io/pr2222/Portfolio-assets/Fantasy-Football-Stadium-iphone-11-pro.jpg' }}
+      style={styles.backgroundImage}
+      resizeMode="cover"
     >
-      <View style={styles.content}>
+      <View style={styles.overlay}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}
+        >
+          <View style={styles.content}>
         <LinearGradient
           colors={[theme.colors.gradient1, theme.colors.gradient2]}
           start={{ x: 0, y: 0 }}
@@ -119,12 +126,23 @@ export default function LoginScreen({ navigation }) {
             <Text style={[styles.demoText, { color: theme.colors.text, fontWeight: '600' }]}>emilys / emilyspass</Text>
           </View>
         </View>
+        </View>
+        </KeyboardAvoidingView>
       </View>
-    </KeyboardAvoidingView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
   container: {
     flex: 1,
   },
