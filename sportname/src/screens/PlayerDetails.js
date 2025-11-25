@@ -14,7 +14,7 @@ import { toggleFavorite } from '../redux/slices/favoriteSlice';
 import { darkTheme } from '../theme/dark';
 import { lightTheme } from '../theme/light';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 export default function PlayerDetails({ route }) {
   const { playerId } = route.params;
@@ -71,7 +71,7 @@ export default function PlayerDetails({ route }) {
             />
           ) : (
             <View style={[styles.playerImagePlaceholder, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
-              <MaterialIcons name="person" size={50} color="#fff" />
+              <Feather name="user" size={50} color="#fff" />
             </View>
           )}
           <View style={styles.headerInfo}>
@@ -86,49 +86,49 @@ export default function PlayerDetails({ route }) {
           onPress={handleToggleFavorite}
           activeOpacity={0.8}
         >
-          <MaterialIcons name={isFavorite ? 'star' : 'star-border'} size={28} color="#FFFFFF" />
+          <Feather name={isFavorite ? 'star' : 'star'} size={28} color={isFavorite ? "#FFD700" : "#FFFFFF"} fill={isFavorite ? "#FFD700" : "none"} />
         </TouchableOpacity>
       </LinearGradient>
 
       <View style={[styles.infoSection, { backgroundColor: theme.colors.card }]}>
         {currentPlayer.strTeam && (
           <View style={styles.infoRow}>
-            <MaterialIcons name="sports-soccer" size={20} color={theme.colors.primary} />
+            <Feather name="disc" size={20} color={theme.colors.primary} />
             <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Team:</Text>
             <Text style={[styles.infoValue, { color: theme.colors.text }]}>{currentPlayer.strTeam}</Text>
           </View>
         )}
         {currentPlayer.strNationality && (
           <View style={styles.infoRow}>
-            <MaterialIcons name="flag" size={20} color={theme.colors.primary} />
+            <Feather name="flag" size={20} color={theme.colors.primary} />
             <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Nationality:</Text>
             <Text style={[styles.infoValue, { color: theme.colors.text }]}>{currentPlayer.strNationality}</Text>
           </View>
         )}
         {currentPlayer.dateBorn && (
           <View style={styles.infoRow}>
-            <MaterialIcons name="cake" size={20} color={theme.colors.primary} />
-            <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Born:</Text>
+            <Feather name="calendar" size={20} color={theme.colors.primary} />
+            <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Birth Date:</Text>
             <Text style={[styles.infoValue, { color: theme.colors.text }]}>{currentPlayer.dateBorn}</Text>
           </View>
         )}
         {currentPlayer.strBirthLocation && (
           <View style={styles.infoRow}>
-            <MaterialIcons name="location-on" size={20} color={theme.colors.primary} />
+            <Feather name="map-pin" size={20} color={theme.colors.primary} />
             <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Birthplace:</Text>
             <Text style={[styles.infoValue, { color: theme.colors.text }]}>{currentPlayer.strBirthLocation}</Text>
           </View>
         )}
         {currentPlayer.strHeight && (
           <View style={styles.infoRow}>
-            <MaterialIcons name="height" size={20} color={theme.colors.primary} />
+            <Feather name="bar-chart-2" size={20} color={theme.colors.primary} />
             <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Height:</Text>
             <Text style={[styles.infoValue, { color: theme.colors.text }]}>{currentPlayer.strHeight}</Text>
           </View>
         )}
         {currentPlayer.strWeight && (
           <View style={styles.infoRow}>
-            <MaterialIcons name="fitness-center" size={20} color={theme.colors.primary} />
+            <Feather name="activity" size={20} color={theme.colors.primary} />
             <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Weight:</Text>
             <Text style={[styles.infoValue, { color: theme.colors.text }]}>{currentPlayer.strWeight}</Text>
           </View>

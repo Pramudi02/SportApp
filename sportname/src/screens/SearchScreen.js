@@ -14,7 +14,7 @@ import { searchPlayers } from '../api/footballApi';
 import { darkTheme } from '../theme/dark';
 import { lightTheme } from '../theme/light';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 export default function SearchScreen({ navigation }) {
   const [players, setPlayers] = useState([]);
@@ -107,7 +107,7 @@ export default function SearchScreen({ navigation }) {
         />
       ) : (
         <View style={[styles.playerImagePlaceholder, { backgroundColor: theme.colors.cardLight }]}>
-          <MaterialIcons name="person" size={30} color={theme.colors.textSecondary} />
+          <Feather name="user" size={30} color={theme.colors.textSecondary} />
         </View>
       )}
       <View style={styles.playerInfo}>
@@ -122,7 +122,7 @@ export default function SearchScreen({ navigation }) {
         <View style={styles.detailsRow}>
           {item.strNationality && (
             <View style={styles.detailItem}>
-              <MaterialIcons name="flag" size={12} color={theme.colors.textSecondary} />
+              <Feather name="flag" size={12} color={theme.colors.textSecondary} />
               <Text style={[styles.detailText, { color: theme.colors.textSecondary }]} numberOfLines={1}>
                 {item.strNationality}
               </Text>
@@ -130,7 +130,7 @@ export default function SearchScreen({ navigation }) {
           )}
           {item.strTeam && (
             <View style={styles.detailItem}>
-              <MaterialIcons name="sports-soccer" size={12} color={theme.colors.textSecondary} />
+              <Feather name="disc" size={12} color={theme.colors.textSecondary} />
               <Text style={[styles.detailText, { color: theme.colors.textSecondary }]} numberOfLines={1}>
                 {item.strTeam}
               </Text>
@@ -138,7 +138,7 @@ export default function SearchScreen({ navigation }) {
           )}
         </View>
       </View>
-      <MaterialIcons name="chevron-right" size={20} color={theme.colors.textSecondary} />
+      <Feather name="chevron-right" size={20} color={theme.colors.textSecondary} />
     </TouchableOpacity>
   );
 
@@ -161,7 +161,7 @@ export default function SearchScreen({ navigation }) {
         end={{ x: 1, y: 1 }}
         style={styles.header}
       >
-        <MaterialIcons name="search" size={40} color="#fff" />
+        <Feather name="search" size={40} color="#fff" />
         <Text style={styles.headerTitle}>Search Players</Text>
         <Text style={styles.headerSubtitle}>
           {players.length} players available
@@ -169,7 +169,7 @@ export default function SearchScreen({ navigation }) {
       </LinearGradient>
 
       <View style={[styles.searchContainer, { backgroundColor: theme.colors.card }]}>
-        <MaterialIcons name="search" size={20} color={theme.colors.textSecondary} style={styles.searchIcon} />
+        <Feather name="search" size={20} color={theme.colors.textSecondary} style={styles.searchIcon} />
         <TextInput
           style={[styles.searchInput, { color: theme.colors.text }]}
           placeholder="Search by name, country, or team..."
@@ -180,7 +180,7 @@ export default function SearchScreen({ navigation }) {
         />
         {searchQuery.length > 0 && (
           <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
-            <MaterialIcons name="close" size={20} color={theme.colors.textSecondary} />
+            <Feather name="x" size={20} color={theme.colors.textSecondary} />
           </TouchableOpacity>
         )}
       </View>
@@ -193,7 +193,7 @@ export default function SearchScreen({ navigation }) {
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <MaterialIcons name="search-off" size={64} color={theme.colors.textSecondary} />
+            <Feather name="search" size={64} color={theme.colors.textSecondary} />
             <Text style={[styles.emptyText, { color: theme.colors.textSecondary }]}>
               {searchQuery.trim() ? 'No players found matching your search' : 'No players found'}
             </Text>

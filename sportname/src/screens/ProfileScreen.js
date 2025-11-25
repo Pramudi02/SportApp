@@ -14,7 +14,7 @@ import { toggleTheme } from '../redux/slices/themeSlice';
 import { darkTheme } from '../theme/dark';
 import { lightTheme } from '../theme/light';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 export default function ProfileScreen() {
   const dispatch = useDispatch();
@@ -76,14 +76,14 @@ export default function ProfileScreen() {
 
         <View style={[styles.infoCard, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
           <View style={[styles.infoRow, { borderBottomColor: theme.colors.border }]}>
-            <MaterialIcons name="person" size={20} color={theme.colors.primary} />
+            <Feather name="user" size={20} color={theme.colors.primary} />
             <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Username</Text>
             <Text style={[styles.infoValue, { color: theme.colors.text }]}>{user?.username || 'N/A'}</Text>
           </View>
 
           {user?.email && (
             <View style={[styles.infoRow, { borderBottomColor: theme.colors.border }]}>
-              <MaterialIcons name="email" size={20} color={theme.colors.primary} />
+              <Feather name="mail" size={20} color={theme.colors.primary} />
               <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Email</Text>
               <Text style={[styles.infoValue, { color: theme.colors.text }]}>{user.email}</Text>
             </View>
@@ -91,7 +91,7 @@ export default function ProfileScreen() {
 
           {user?.gender && (
             <View style={[styles.infoRow, { borderBottomColor: theme.colors.border }]}>
-              <MaterialIcons name="wc" size={20} color={theme.colors.primary} />
+              <Feather name="users" size={20} color={theme.colors.primary} />
               <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Gender</Text>
               <Text style={[styles.infoValue, { color: theme.colors.text }]}>{user.gender}</Text>
             </View>
@@ -99,7 +99,7 @@ export default function ProfileScreen() {
 
           {user?.age && (
             <View style={[styles.infoRow, { borderBottomColor: 'transparent' }]}>
-              <MaterialIcons name="cake" size={20} color={theme.colors.primary} />
+              <Feather name="calendar" size={20} color={theme.colors.primary} />
               <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Age</Text>
               <Text style={[styles.infoValue, { color: theme.colors.text }]}>{user.age}</Text>
             </View>
@@ -113,7 +113,7 @@ export default function ProfileScreen() {
         <View style={[styles.infoCard, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
           <View style={styles.settingRow}>
             <View style={styles.settingIconContainer}>
-              <MaterialIcons name={isDarkMode ? 'dark-mode' : 'light-mode'} size={24} color={theme.colors.primary} />
+              <Feather name={isDarkMode ? 'moon' : 'sun'} size={24} color={theme.colors.primary} />
             </View>
             <View style={styles.settingInfo}>
               <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
@@ -145,7 +145,7 @@ export default function ProfileScreen() {
             end={{ x: 1, y: 0 }}
             style={styles.logoutButton}
           >
-            <MaterialIcons name="logout" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
+            <Feather name="log-out" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
             <Text style={styles.logoutButtonText}>Logout</Text>
           </LinearGradient>
         </TouchableOpacity>

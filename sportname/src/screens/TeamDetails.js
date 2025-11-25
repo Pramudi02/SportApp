@@ -14,7 +14,7 @@ import { fetchTeamDetails, fetchPlayersByTeam } from '../redux/slices/footballSl
 import { darkTheme } from '../theme/dark';
 import { lightTheme } from '../theme/light';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 export default function TeamDetails({ route, navigation }) {
   const { teamId } = route.params;
@@ -44,7 +44,7 @@ export default function TeamDetails({ route, navigation }) {
         />
       ) : (
         <View style={[styles.playerImagePlaceholder, { backgroundColor: theme.colors.cardLight }]}>
-          <MaterialIcons name="person" size={30} color={theme.colors.textSecondary} />
+          <Feather name="user" size={30} color={theme.colors.textSecondary} />
         </View>
       )}
       <View style={styles.playerInfo}>
@@ -55,7 +55,7 @@ export default function TeamDetails({ route, navigation }) {
           {item.strPosition || 'Player'}
         </Text>
       </View>
-      <MaterialIcons name="chevron-right" size={20} color={theme.colors.textSecondary} />
+      <Feather name="chevron-right" size={20} color={theme.colors.textSecondary} />
     </TouchableOpacity>
   );
 
@@ -93,7 +93,7 @@ export default function TeamDetails({ route, navigation }) {
           />
         ) : (
           <View style={[styles.teamBadgePlaceholder, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
-            <MaterialIcons name="shield" size={60} color="#fff" />
+            <Feather name="shield" size={60} color="#fff" />
           </View>
         )}
         <Text style={styles.teamName}>{currentTeam.strTeam}</Text>
@@ -107,21 +107,21 @@ export default function TeamDetails({ route, navigation }) {
       <View style={[styles.infoSection, { backgroundColor: theme.colors.card }]}>
         {currentTeam.strStadium && (
           <View style={styles.infoRow}>
-            <MaterialIcons name="stadium" size={20} color={theme.colors.primary} />
+            <Feather name="home" size={20} color={theme.colors.primary} />
             <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Stadium:</Text>
             <Text style={[styles.infoValue, { color: theme.colors.text }]}>{currentTeam.strStadium}</Text>
           </View>
         )}
         {currentTeam.strLocation && (
           <View style={styles.infoRow}>
-            <MaterialIcons name="location-on" size={20} color={theme.colors.primary} />
+            <Feather name="map-pin" size={20} color={theme.colors.primary} />
             <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Location:</Text>
             <Text style={[styles.infoValue, { color: theme.colors.text }]}>{currentTeam.strLocation}</Text>
           </View>
         )}
         {currentTeam.strLeague && (
           <View style={[styles.infoRow, { borderBottomWidth: 0 }]}>
-            <MaterialIcons name="emoji-events" size={20} color={theme.colors.primary} />
+            <Feather name="award" size={20} color={theme.colors.primary} />
             <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>League:</Text>
             <Text style={[styles.infoValue, { color: theme.colors.text }]}>{currentTeam.strLeague}</Text>
           </View>

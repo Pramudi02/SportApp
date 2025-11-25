@@ -12,7 +12,7 @@ import { toggleFavorite } from '../redux/slices/favoriteSlice';
 import { darkTheme } from '../theme/dark';
 import { lightTheme } from '../theme/light';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 export default function FavoritesScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -52,7 +52,7 @@ export default function FavoritesScreen({ navigation }) {
           )}
           {item.strTeam && (
             <Text style={[styles.team, { color: theme.colors.textSecondary }]} numberOfLines={1}>
-              <MaterialIcons name="sports-soccer" size={14} color={theme.colors.textSecondary} /> {item.strTeam}
+              <Feather name="disc" size={14} color={theme.colors.textSecondary} /> {item.strTeam}
             </Text>
           )}
         </View>
@@ -62,7 +62,7 @@ export default function FavoritesScreen({ navigation }) {
         onPress={() => handleRemoveFavorite(item)}
         activeOpacity={0.8}
       >
-        <MaterialIcons name="close" size={20} color="#FFFFFF" />
+        <Feather name="x" size={20} color="#FFFFFF" />
       </TouchableOpacity>
     </View>
   );
@@ -75,7 +75,7 @@ export default function FavoritesScreen({ navigation }) {
         end={{ x: 1, y: 1 }}
         style={styles.header}
       >
-        <MaterialIcons name="star" size={32} color="#FFFFFF" style={{ marginBottom: 8 }} />
+        <Feather name="star" size={32} color="#FFFFFF" style={{ marginBottom: 8 }} />
         <Text style={styles.headerTitle}>My Favorites</Text>
         <Text style={styles.headerSubtitle}>
           {favorites.length} player{favorites.length !== 1 ? 's' : ''} saved
@@ -90,7 +90,7 @@ export default function FavoritesScreen({ navigation }) {
             end={{ x: 1, y: 1 }}
             style={styles.emptyIconContainer}
           >
-            <MaterialIcons name="star-border" size={64} color={theme.colors.primary} />
+            <Feather name="star" size={64} color={theme.colors.primary} />
           </LinearGradient>
           <Text style={[styles.emptyText, { color: theme.colors.text }]}>No favorites yet</Text>
           <Text style={[styles.emptySubtext, { color: theme.colors.textSecondary }]}>

@@ -117,3 +117,73 @@ export const searchTeams = async (teamName) => {
     throw new Error('Failed to search teams');
   }
 };
+
+/**
+ * Get next 15 events by league ID
+ * @param {string} leagueId 
+ * @returns {Promise<Array>} List of upcoming matches
+ */
+export const getNextEventsByLeague = async (leagueId) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/eventsnextleague.php?id=${leagueId}`);
+    return response.data.events || [];
+  } catch (error) {
+    throw new Error('Failed to fetch upcoming matches');
+  }
+};
+
+/**
+ * Get last 15 events by league ID
+ * @param {string} leagueId 
+ * @returns {Promise<Array>} List of past matches
+ */
+export const getLastEventsByLeague = async (leagueId) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/eventspastleague.php?id=${leagueId}`);
+    return response.data.events || [];
+  } catch (error) {
+    throw new Error('Failed to fetch past matches');
+  }
+};
+
+/**
+ * Get event details by event ID
+ * @param {string} eventId 
+ * @returns {Promise<Object>} Event details
+ */
+export const getEventDetails = async (eventId) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/lookupevent.php?id=${eventId}`);
+    return response.data.events?.[0] || null;
+  } catch (error) {
+    throw new Error('Failed to fetch event details');
+  }
+};
+
+/**
+ * Get next 5 events by team ID
+ * @param {string} teamId 
+ * @returns {Promise<Array>} List of upcoming team matches
+ */
+export const getNextEventsByTeam = async (teamId) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/eventsnext.php?id=${teamId}`);
+    return response.data.events || [];
+  } catch (error) {
+    throw new Error('Failed to fetch team matches');
+  }
+};
+
+/**
+ * Get last 5 events by team ID
+ * @param {string} teamId 
+ * @returns {Promise<Array>} List of past team matches
+ */
+export const getLastEventsByTeam = async (teamId) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/eventslast.php?id=${teamId}`);
+    return response.data.results || [];
+  } catch (error) {
+    throw new Error('Failed to fetch past team matches');
+  }
+};

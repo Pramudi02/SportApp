@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSelector, useDispatch } from 'react-redux';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { Feather } from '@expo/vector-icons';
 import { checkAuthStatus } from '../redux/slices/authSlice';
 import { loadFavoritesFromStorage } from '../redux/slices/favoriteSlice';
 import { loadThemeFromStorage } from '../redux/slices/themeSlice';
@@ -17,6 +17,8 @@ import PlayerDetails from '../screens/PlayerDetails';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import SearchScreen from '../screens/SearchScreen';
+import MatchesScreen from '../screens/MatchesScreen';
+import MatchDetailsScreen from '../screens/MatchDetailsScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -69,6 +71,11 @@ function HomeStack() {
         component={PlayerDetails}
         options={{ title: 'Player Details' }}
       />
+      <Stack.Screen
+        name="MatchDetails"
+        component={MatchDetailsScreen}
+        options={{ title: 'Match Details' }}
+      />
     </Stack.Navigator>
   );
 }
@@ -94,8 +101,19 @@ function MainTabs() {
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="home" size={size} color={color} />
+            <Feather name="home" size={size} color={color} />
           ),
+        }}
+      />
+      <Tab.Screen
+        name="MatchesTab"
+        component={MatchesScreen}
+        options={{
+          tabBarLabel: 'Matches',
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="activity" size={size} color={color} />
+          ),
+          headerShown: false,
         }}
       />
       <Tab.Screen
@@ -104,7 +122,7 @@ function MainTabs() {
         options={{
           tabBarLabel: 'Search',
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="search" size={size} color={color} />
+            <Feather name="search" size={size} color={color} />
           ),
           headerShown: true,
           headerStyle: {
@@ -123,7 +141,7 @@ function MainTabs() {
         options={{
           tabBarLabel: 'Favorites',
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="star" size={size} color={color} />
+            <Feather name="star" size={size} color={color} />
           ),
           headerShown: true,
           headerStyle: {
@@ -142,7 +160,7 @@ function MainTabs() {
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="person" size={size} color={color} />
+            <Feather name="user" size={size} color={color} />
           ),
           headerShown: true,
           headerStyle: {

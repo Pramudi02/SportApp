@@ -13,7 +13,7 @@ import { fetchTeamsByLeague } from '../redux/slices/footballSlice';
 import { darkTheme } from '../theme/dark';
 import { lightTheme } from '../theme/light';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 export default function LeagueDetails({ route, navigation }) {
   const { leagueId } = route.params;
@@ -48,7 +48,7 @@ export default function LeagueDetails({ route, navigation }) {
         />
       ) : (
         <View style={[styles.teamBadgePlaceholder, { backgroundColor: theme.colors.cardLight }]}>
-          <MaterialIcons name="shield" size={40} color={theme.colors.textSecondary} />
+          <Feather name="shield" size={40} color={theme.colors.textSecondary} />
         </View>
       )}
       <View style={styles.cardInfo}>
@@ -57,7 +57,7 @@ export default function LeagueDetails({ route, navigation }) {
         </Text>
         {item.strStadium && (
           <Text style={[styles.stadium, { color: theme.colors.textSecondary }]} numberOfLines={1}>
-            <MaterialIcons name="stadium" size={12} color={theme.colors.textSecondary} /> {item.strStadium}
+            <Feather name="home" size={12} color={theme.colors.textSecondary} /> {item.strStadium}
           </Text>
         )}
       </View>

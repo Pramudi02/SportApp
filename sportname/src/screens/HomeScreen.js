@@ -16,7 +16,7 @@ import { fetchLeagues } from '../redux/slices/footballSlice';
 import { darkTheme } from '../theme/dark';
 import { lightTheme } from '../theme/light';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { getFootballNews } from '../api/newsApi';
 
 export default function HomeScreen({ navigation }) {
@@ -99,7 +99,7 @@ export default function HomeScreen({ navigation }) {
           />
         ) : (
           <View style={[styles.newsImagePlaceholder, { backgroundColor: theme.colors.cardLight }]}>
-            <MaterialIcons name="sports-soccer" size={48} color={theme.colors.textSecondary} />
+            <Feather name="disc" size={48} color={theme.colors.textSecondary} />
           </View>
         )}
         <View style={styles.newsContent}>
@@ -136,7 +136,7 @@ export default function HomeScreen({ navigation }) {
       />
       <View style={styles.cardContent}>
         <View style={[styles.iconContainer, { backgroundColor: theme.colors.primary + '20' }]}>
-          <MaterialIcons name="sports-soccer" size={28} color={theme.colors.primary} />
+          <Feather name="disc" size={28} color={theme.colors.primary} />
         </View>
         <View style={styles.cardInfo}>
           <Text style={[styles.leagueName, { color: theme.colors.text }]} numberOfLines={1}>
@@ -146,7 +146,7 @@ export default function HomeScreen({ navigation }) {
             {item.strCountry || 'International'}
           </Text>
         </View>
-        <MaterialIcons name="chevron-right" size={24} color={theme.colors.primary} />
+        <Feather name="chevron-right" size={24} color={theme.colors.primary} />
       </View>
     </TouchableOpacity>
   );
@@ -184,8 +184,8 @@ export default function HomeScreen({ navigation }) {
             onPress={() => setActiveTab('news')}
             activeOpacity={0.7}
           >
-            <MaterialIcons name="newspaper" size={20} color="#FFFFFF" />
-            <Text style={styles.tabButtonText}>Top News</Text>
+            <Feather name="file-text" size={20} color="#FFFFFF" />
+            <Text style={styles.tabText}>Top News</Text>
           </TouchableOpacity>
           
           <TouchableOpacity
@@ -197,8 +197,8 @@ export default function HomeScreen({ navigation }) {
             onPress={() => setActiveTab('leagues')}
             activeOpacity={0.7}
           >
-            <MaterialIcons name="emoji-events" size={20} color="#FFFFFF" />
-            <Text style={styles.tabButtonText}>Upcoming Leagues</Text>
+            <Feather name="award" size={20} color="#FFFFFF" />
+            <Text style={styles.tabText}>Upcoming Leagues</Text>
           </TouchableOpacity>
         </View>
       </LinearGradient>
@@ -238,7 +238,7 @@ export default function HomeScreen({ navigation }) {
                   activeOpacity={0.7}
                 >
                   <Text style={[styles.viewMoreText, { color: theme.colors.primary }]}>View More News</Text>
-                  <MaterialIcons name="arrow-forward" size={20} color={theme.colors.primary} />
+                  <Feather name="arrow-right" size={20} color={theme.colors.primary} />
                 </TouchableOpacity>
               </>
             )}
@@ -323,6 +323,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  tabText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
   },
   tabButtonText: {
     color: '#FFFFFF',

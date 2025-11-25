@@ -16,7 +16,7 @@ import { loginUser } from '../redux/slices/authSlice';
 import { darkTheme } from '../theme/dark';
 import { lightTheme } from '../theme/light';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState('');
@@ -59,7 +59,7 @@ export default function LoginScreen({ navigation }) {
           end={{ x: 1, y: 1 }}
           style={styles.logoContainer}
         >
-          <MaterialIcons name="sports-soccer" size={60} color="#FFFFFF" />
+          <Feather name="disc" size={60} color="#FFFFFF" />
         </LinearGradient>
         
         <Text style={[styles.title, { color: theme.colors.text }]}>FootyScope</Text>
@@ -67,7 +67,7 @@ export default function LoginScreen({ navigation }) {
 
         <View style={styles.form}>
           <View style={[styles.inputContainer, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
-            <MaterialIcons name="person" size={20} color={theme.colors.textSecondary} />
+            <Feather name="user" size={20} color={theme.colors.textSecondary} />
             <TextInput
               style={[styles.input, { color: theme.colors.text }]}
               placeholder="Username"
@@ -79,7 +79,7 @@ export default function LoginScreen({ navigation }) {
           </View>
 
           <View style={[styles.inputContainer, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
-            <MaterialIcons name="lock" size={20} color={theme.colors.textSecondary} />
+            <Feather name="lock" size={20} color={theme.colors.textSecondary} />
             <TextInput
               style={[styles.input, { color: theme.colors.text }]}
               placeholder="Password"
@@ -121,7 +121,7 @@ export default function LoginScreen({ navigation }) {
           </TouchableOpacity>
 
           <View style={[styles.demoContainer, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
-            <MaterialIcons name="info" size={20} color={theme.colors.info} style={{ marginBottom: 8 }} />
+            <Feather name="info" size={20} color={theme.colors.info} style={{ marginBottom: 8}} />
             <Text style={[styles.demoText, { color: theme.colors.textSecondary }]}>Demo credentials:</Text>
             <Text style={[styles.demoText, { color: theme.colors.text, fontWeight: '600' }]}>emilys / emilyspass</Text>
           </View>
