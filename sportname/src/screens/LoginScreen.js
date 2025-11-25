@@ -10,6 +10,7 @@ import {
   Platform,
   Alert,
   ImageBackground,
+  Image,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../redux/slices/authSlice';
@@ -43,7 +44,7 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <ImageBackground
-      source={{ uri: 'https://ik.imagekit.io/pr2222/Portfolio-assets/Fantasy-Football-Stadium-iphone-11-pro.jpg' }}
+      source={{ uri: 'https://ik.imagekit.io/pr2222/Portfolio-assets/Fantasy-Football-Stadium-iphone-11-pro12.jpg' }}
       style={styles.backgroundImage}
       resizeMode="cover"
     >
@@ -59,7 +60,11 @@ export default function LoginScreen({ navigation }) {
           end={{ x: 1, y: 1 }}
           style={styles.logoContainer}
         >
-          <Feather name="disc" size={60} color="#FFFFFF" />
+          <Image
+            source={{ uri: 'https://ik.imagekit.io/pr2222/Portfolio-assets/transparent-white-outline-soccer-ball-icon-701751694971938q8rdejzcfi.png' }}
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
         </LinearGradient>
         
         <Text style={[styles.title, { color: theme.colors.text }]}>FootyScope</Text>
@@ -141,7 +146,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   container: {
     flex: 1,
@@ -164,6 +169,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 16,
     elevation: 10,
+  },
+  logoImage: {
+    width: 100,
+    height: 100,
   },
   title: {
     fontSize: 38,

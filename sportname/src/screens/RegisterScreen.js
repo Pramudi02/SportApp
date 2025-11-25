@@ -11,6 +11,7 @@ import {
   Alert,
   ScrollView,
   ImageBackground,
+  Image,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { validateEmail, validatePassword } from '../utils/validators';
@@ -118,7 +119,7 @@ export default function RegisterScreen({ navigation }) {
 
   return (
     <ImageBackground
-      source={{ uri: 'https://ik.imagekit.io/pr2222/Portfolio-assets/Fantasy-Football-Stadium-iphone-11-pro.jpg' }}
+      source={{ uri: 'https://ik.imagekit.io/pr2222/Portfolio-assets/Fantasy-Football-Stadium-iphone-11-pro12.jpg' }}
       style={styles.backgroundImage}
       resizeMode="cover"
     >
@@ -135,7 +136,11 @@ export default function RegisterScreen({ navigation }) {
             end={{ x: 1, y: 1 }}
             style={styles.logoContainer}
           >
-            <Feather name="user-plus" size={48} color="#FFFFFF" />
+            <Image
+              source={{ uri: 'https://ik.imagekit.io/pr2222/Portfolio-assets/transparent-white-outline-soccer-ball-icon-701751694971938q8rdejzcfi.png' }}
+              style={styles.logoImage}
+              resizeMode="contain"
+            />
           </LinearGradient>
 
           <Text style={[styles.title, { color: theme.colors.text }]}>Create Account</Text>
@@ -235,7 +240,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   container: {
     flex: 1,
@@ -250,9 +255,9 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
   },
   logoContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
@@ -262,6 +267,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 16,
     elevation: 10,
+  },
+  logoImage: {
+    width: 100,
+    height: 100,
   },
   title: {
     fontSize: 34,
