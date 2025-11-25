@@ -125,7 +125,7 @@ export default function MatchesScreen({ navigation }) {
         style={[styles.matchCard, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}
         onPress={() => {
           console.log('Navigating to match:', item.idEvent);
-          navigation.navigate('MatchDetails', { matchId: item.idEvent });
+          navigation.navigate('MatchDetails', { match: item });
         }}
         activeOpacity={0.7}
       >

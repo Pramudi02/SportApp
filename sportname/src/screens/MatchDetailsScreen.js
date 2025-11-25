@@ -15,31 +15,31 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 
 export default function MatchDetailsScreen({ route }) {
-  const { matchId } = route.params;
-  const [match, setMatch] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { match: matchData, matchId } = route.params;
+  const [match, setMatch] = useState(matchData || null);
+  const [loading, setLoading] = useState(!matchData);
   const { isDarkMode } = useSelector((state) => state.theme);
 
   const theme = isDarkMode ? darkTheme : lightTheme;
 
   useEffect(() => {
-    // Reset state when matchId changes
-    setMatch(null);
-    setLoading(true);
-    loadMatchDetails();
-  }, [matchId]);
+    // If match data is passed directly, use it
+    if (matchData) {
+      console.log('Using passed match data:', matchData);
+      setMatch(matchData);
+      setLoading(false);
+    } else if (matchId) {
+      // Only fetch if we don't have match data
+      loadMatchDetails();
+    }
+  }, [matchData, matchId]);
 
   const loadMatchDetails = async () => {
+    setLoading(true);
     try {
       console.log('Loading match details for ID:', matchId);
       const data = await getEventDetails(matchId);
       console.log('Received match data:', data);
-      
-      // Check if the returned match ID matches the requested ID
-      if (data && data.idEvent !== matchId) {
-        console.warn(`API returned different match! Requested: ${matchId}, Got: ${data.idEvent}`);
-      }
-      
       setMatch(data);
     } catch (error) {
       console.error('Error loading match details:', error);
@@ -86,16 +86,6 @@ export default function MatchDetailsScreen({ route }) {
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      {/* Warning if API returned wrong match */}
-      {match && match.idEvent !== matchId && (
-        <View style={[styles.warningBanner, { backgroundColor: theme.colors.error + '20' }]}>
-          <Feather name="alert-triangle" size={20} color={theme.colors.error} />
-          <Text style={[styles.warningText, { color: theme.colors.error }]}>
-            Match data unavailable. Showing similar match.
-          </Text>
-        </View>
-      )}
-      
       {/* Header */}
       <LinearGradient
         colors={[theme.colors.gradient1, theme.colors.gradient2]}
@@ -288,19 +278,6 @@ export default function MatchDetailsScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  warningBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 12,
-    gap: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,0,0,0.2)',
-  },
-  warningText: {
-    flex: 1,
-    fontSize: 13,
-    fontWeight: '600',
   },
   loadingContainer: {
     flex: 1,
