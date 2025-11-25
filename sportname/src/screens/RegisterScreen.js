@@ -11,12 +11,15 @@ import {
   Alert,
   ScrollView,
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { validateEmail, validatePassword } from '../utils/validators';
+import { register } from '../api/authApi';
+import { loginUser } from '../redux/slices/authSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { darkTheme } from '../theme/dark';
 import { lightTheme } from '../theme/light';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 export default function RegisterScreen({ navigation }) {
   const [formData, setFormData] = useState({
@@ -27,6 +30,7 @@ export default function RegisterScreen({ navigation }) {
   });
   const [loading, setLoading] = useState(false);
   const { isDarkMode } = useSelector((state) => state.theme);
+  const dispatch = useDispatch();
 
   const theme = isDarkMode ? darkTheme : lightTheme;
 
@@ -62,20 +66,49 @@ export default function RegisterScreen({ navigation }) {
     setLoading(true);
 
     try {
-      // Simulate registration
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Store user credentials locally
+      const existingUsers = await AsyncStorage.getItem('registeredUsers');
+      const users = existingUsers ? JSON.parse(existingUsers) : [];
+      
+      // Check if username already exists
+      const userExists = users.find(u => u.username === username || u.email === email);
+      if (userExists) {
+        Alert.alert('Error', 'Username or email already exists');
+        setLoading(false);
+        return;
+      }
+      
+      // Add new user
+      users.push({ username, password, email });
+      await AsyncStorage.setItem('registeredUsers', JSON.stringify(users));
 
-      Alert.alert(
-        'Success',
-        'Registration successful! Please login with your credentials.',
-        [
-          {
-            text: 'OK',
-            onPress: () => navigation.navigate('Login'),
-          },
-        ]
-      );
+      // Create mock user data and token for registered user
+      const mockUserData = {
+        id: Date.now(),
+        username,
+        email,
+        firstName: username,
+        lastName: '',
+        gender: '',
+        image: '',
+      };
+      
+      const mockToken = `mock_token_${Date.now()}`;
+      
+      // Store auth data
+      await AsyncStorage.setItem('authToken', mockToken);
+      await AsyncStorage.setItem('userData', JSON.stringify(mockUserData));
+      
+      // Dispatch login action with mock data
+      dispatch(loginUser({ username, password }));
+      
+      Alert.alert('Success', 'Account created successfully!', [
+        { text: 'OK', onPress: () => {} }
+      ]);
+      
+      // Navigation will be handled automatically by AppNavigator
     } catch (error) {
+      console.error('Registration error:', error);
       Alert.alert('Error', 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
@@ -95,7 +128,7 @@ export default function RegisterScreen({ navigation }) {
             end={{ x: 1, y: 1 }}
             style={styles.logoContainer}
           >
-            <MaterialIcons name="person-add" size={48} color="#FFFFFF" />
+            <Feather name="user-plus" size={48} color="#FFFFFF" />
           </LinearGradient>
 
           <Text style={[styles.title, { color: theme.colors.text }]}>Create Account</Text>
@@ -103,7 +136,7 @@ export default function RegisterScreen({ navigation }) {
 
           <View style={styles.form}>
             <View style={[styles.inputContainer, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
-              <MaterialIcons name="person" size={20} color={theme.colors.textSecondary} />
+              <Feather name="user" size={20} color={theme.colors.textSecondary} />
               <TextInput
                 style={[styles.input, { color: theme.colors.text }]}
                 placeholder="Username"
@@ -115,7 +148,7 @@ export default function RegisterScreen({ navigation }) {
             </View>
 
             <View style={[styles.inputContainer, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
-              <MaterialIcons name="email" size={20} color={theme.colors.textSecondary} />
+              <Feather name="mail" size={20} color={theme.colors.textSecondary} />
               <TextInput
                 style={[styles.input, { color: theme.colors.text }]}
                 placeholder="Email"
@@ -128,7 +161,7 @@ export default function RegisterScreen({ navigation }) {
             </View>
 
             <View style={[styles.inputContainer, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
-              <MaterialIcons name="lock" size={20} color={theme.colors.textSecondary} />
+              <Feather name="lock" size={20} color={theme.colors.textSecondary} />
               <TextInput
                 style={[styles.input, { color: theme.colors.text }]}
                 placeholder="Password"
@@ -140,7 +173,7 @@ export default function RegisterScreen({ navigation }) {
             </View>
 
             <View style={[styles.inputContainer, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
-              <MaterialIcons name="lock-outline" size={20} color={theme.colors.textSecondary} />
+              <Feather name="lock" size={20} color={theme.colors.textSecondary} />
               <TextInput
                 style={[styles.input, { color: theme.colors.text }]}
                 placeholder="Confirm Password"

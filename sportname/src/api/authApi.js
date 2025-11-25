@@ -11,6 +11,34 @@ const AUTH_API_URL = 'https://dummyjson.com/auth';
  */
 export const login = async (username, password) => {
   try {
+    // First check if user is registered locally
+    const registeredUsers = await AsyncStorage.getItem('registeredUsers');
+    if (registeredUsers) {
+      const users = JSON.parse(registeredUsers);
+      const localUser = users.find(u => u.username === username && u.password === password);
+      
+      if (localUser) {
+        // User found in local storage - create mock session
+        const mockToken = `mock_token_${Date.now()}`;
+        const userData = {
+          id: Date.now(),
+          username: localUser.username,
+          email: localUser.email,
+          firstName: localUser.username,
+          lastName: '',
+          gender: '',
+          image: '',
+          token: mockToken,
+        };
+        
+        await AsyncStorage.setItem('authToken', mockToken);
+        await AsyncStorage.setItem('userData', JSON.stringify(userData));
+        
+        return userData;
+      }
+    }
+    
+    // If not found locally, try DummyJSON API
     const response = await axios.post(`${AUTH_API_URL}/login`, {
       username,
       password,
