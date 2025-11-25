@@ -61,6 +61,15 @@ export default function PlayerDetails({ route }) {
         end={{ x: 1, y: 1 }}
         style={styles.header}
       >
+        {/* Favorite button in top-right corner */}
+        <TouchableOpacity
+          style={[styles.favoriteButton, isFavorite && styles.favoriteButtonActive]}
+          onPress={handleToggleFavorite}
+          activeOpacity={0.8}
+        >
+          <Feather name={isFavorite ? 'star' : 'star'} size={24} color={isFavorite ? "#FFD700" : "#FFFFFF"} fill={isFavorite ? "#FFD700" : "none"} />
+        </TouchableOpacity>
+
         <View style={styles.headerContent}>
           {currentPlayer.strThumb ? (
             <Image
@@ -81,13 +90,6 @@ export default function PlayerDetails({ route }) {
             )}
           </View>
         </View>
-        <TouchableOpacity
-          style={[styles.favoriteButton, isFavorite && styles.favoriteButtonActive]}
-          onPress={handleToggleFavorite}
-          activeOpacity={0.8}
-        >
-          <Feather name={isFavorite ? 'star' : 'star'} size={28} color={isFavorite ? "#FFD700" : "#FFFFFF"} fill={isFavorite ? "#FFD700" : "none"} />
-        </TouchableOpacity>
       </LinearGradient>
 
       <View style={[styles.infoSection, { backgroundColor: theme.colors.card }]}>
@@ -164,11 +166,11 @@ const styles = StyleSheet.create({
   header: {
     padding: 24,
     paddingTop: 20,
+    position: 'relative',
   },
   headerContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
   },
   playerImage: {
     width: 90,
@@ -202,10 +204,13 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   favoriteButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -213,9 +218,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 6,
+    zIndex: 10,
   },
   favoriteButtonActive: {
-    backgroundColor: '#FFD700',
+    backgroundColor: 'rgba(255, 215, 0, 0.3)',
   },
   infoSection: {
     padding: 20,

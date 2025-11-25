@@ -19,6 +19,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import SearchScreen from '../screens/SearchScreen';
 import MatchesScreen from '../screens/MatchesScreen';
 import MatchDetailsScreen from '../screens/MatchDetailsScreen';
+import NewsScreen from '../screens/NewsScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -75,6 +76,11 @@ function HomeStack() {
         name="MatchDetails"
         component={MatchDetailsScreen}
         options={{ title: 'Match Details' }}
+      />
+      <Stack.Screen
+        name="News"
+        component={NewsScreen}
+        options={{ title: 'Football News' }}
       />
     </Stack.Navigator>
   );

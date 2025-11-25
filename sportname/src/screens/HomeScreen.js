@@ -234,7 +234,7 @@ export default function HomeScreen({ navigation }) {
                 
                 <TouchableOpacity
                   style={[styles.viewMoreButton, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}
-                  onPress={() => {/* Navigate to full news screen */}}
+                  onPress={() => navigation.navigate('News')}
                   activeOpacity={0.7}
                 >
                   <Text style={[styles.viewMoreText, { color: theme.colors.primary }]}>View More News</Text>
