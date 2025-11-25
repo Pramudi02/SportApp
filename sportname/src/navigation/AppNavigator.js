@@ -80,6 +80,34 @@ function HomeStack() {
   );
 }
 
+// Matches Stack
+function MatchesStack() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#0f2744',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+    >
+      <Stack.Screen
+        name="Matches"
+        component={MatchesScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="MatchDetails"
+        component={MatchDetailsScreen}
+        options={{ title: 'Match Details' }}
+      />
+    </Stack.Navigator>
+  );
+}
+
 // Main Tab Navigator
 function MainTabs() {
   return (
@@ -107,13 +135,12 @@ function MainTabs() {
       />
       <Tab.Screen
         name="MatchesTab"
-        component={MatchesScreen}
+        component={MatchesStack}
         options={{
           tabBarLabel: 'Matches',
           tabBarIcon: ({ color, size }) => (
             <Feather name="activity" size={size} color={color} />
           ),
-          headerShown: false,
         }}
       />
       <Tab.Screen

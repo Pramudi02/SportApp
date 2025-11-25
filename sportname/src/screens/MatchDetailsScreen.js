@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { getEventDetails } from '../api/footballApi';
@@ -22,12 +23,23 @@ export default function MatchDetailsScreen({ route }) {
   const theme = isDarkMode ? darkTheme : lightTheme;
 
   useEffect(() => {
+    // Reset state when matchId changes
+    setMatch(null);
+    setLoading(true);
     loadMatchDetails();
   }, [matchId]);
 
   const loadMatchDetails = async () => {
     try {
+      console.log('Loading match details for ID:', matchId);
       const data = await getEventDetails(matchId);
+      console.log('Received match data:', data);
+      
+      // Check if the returned match ID matches the requested ID
+      if (data && data.idEvent !== matchId) {
+        console.warn(`API returned different match! Requested: ${matchId}, Got: ${data.idEvent}`);
+      }
+      
       setMatch(data);
     } catch (error) {
       console.error('Error loading match details:', error);
@@ -74,6 +86,16 @@ export default function MatchDetailsScreen({ route }) {
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      {/* Warning if API returned wrong match */}
+      {match && match.idEvent !== matchId && (
+        <View style={[styles.warningBanner, { backgroundColor: theme.colors.error + '20' }]}>
+          <Feather name="alert-triangle" size={20} color={theme.colors.error} />
+          <Text style={[styles.warningText, { color: theme.colors.error }]}>
+            Match data unavailable. Showing similar match.
+          </Text>
+        </View>
+      )}
+      
       {/* Header */}
       <LinearGradient
         colors={[theme.colors.gradient1, theme.colors.gradient2]}
@@ -81,13 +103,35 @@ export default function MatchDetailsScreen({ route }) {
         end={{ x: 1, y: 1 }}
         style={styles.header}
       >
-        <Text style={styles.leagueTitle}>{match.strLeague}</Text>
-        <Text style={styles.seasonText}>{match.strSeason}</Text>
+        {/* League Badge and Title */}
+        <View style={styles.leagueHeader}>
+          {match.strLeagueBadge ? (
+            <Image 
+              source={{ uri: match.strLeagueBadge }}
+              style={styles.leagueBadge}
+              resizeMode="contain"
+            />
+          ) : (
+            <Feather name="award" size={32} color="#FFFFFF" />
+          )}
+          <View style={styles.leagueInfo}>
+            <Text style={styles.leagueTitle}>{match.strLeague}</Text>
+            <Text style={styles.seasonText}>{match.strSeason}</Text>
+          </View>
+        </View>
         
         {/* Score Display */}
         <View style={styles.scoreSection}>
           <View style={styles.teamSection}>
-            <Feather name="shield" size={48} color="#FFFFFF" />
+            {match.strHomeTeamBadge ? (
+              <Image 
+                source={{ uri: match.strHomeTeamBadge }}
+                style={styles.teamBadge}
+                resizeMode="contain"
+              />
+            ) : (
+              <Feather name="shield" size={48} color="#FFFFFF" />
+            )}
             <Text style={styles.teamName}>{match.strHomeTeam}</Text>
           </View>
 
@@ -114,7 +158,15 @@ export default function MatchDetailsScreen({ route }) {
           </View>
 
           <View style={styles.teamSection}>
-            <Feather name="shield" size={48} color="#FFFFFF" />
+            {match.strAwayTeamBadge ? (
+              <Image 
+                source={{ uri: match.strAwayTeamBadge }}
+                style={styles.teamBadge}
+                resizeMode="contain"
+              />
+            ) : (
+              <Feather name="shield" size={48} color="#FFFFFF" />
+            )}
             <Text style={styles.teamName}>{match.strAwayTeam}</Text>
           </View>
         </View>
@@ -164,11 +216,31 @@ export default function MatchDetailsScreen({ route }) {
           )}
 
           {match.strCity && (
-            <View style={[styles.infoRow, { borderBottomWidth: 0 }]}>
+            <View style={styles.infoRow}>
               <Feather name="map" size={20} color={theme.colors.primary} />
               <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>City:</Text>
               <Text style={[styles.infoValue, { color: theme.colors.text }]}>
                 {match.strCity}
+              </Text>
+            </View>
+          )}
+
+          {match.intRound && (
+            <View style={styles.infoRow}>
+              <Feather name="hash" size={20} color={theme.colors.primary} />
+              <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Round:</Text>
+              <Text style={[styles.infoValue, { color: theme.colors.text }]}>
+                {match.intRound}
+              </Text>
+            </View>
+          )}
+
+          {match.intSpectators && (
+            <View style={[styles.infoRow, { borderBottomWidth: 0 }]}>
+              <Feather name="users" size={20} color={theme.colors.primary} />
+              <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>Attendance:</Text>
+              <Text style={[styles.infoValue, { color: theme.colors.text }]}>
+                {Number(match.intSpectators).toLocaleString()}
               </Text>
             </View>
           )}
@@ -217,6 +289,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  warningBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    gap: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,0,0,0.2)',
+  },
+  warningText: {
+    flex: 1,
+    fontSize: 13,
+    fontWeight: '600',
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -236,19 +321,31 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 30,
   },
+  leagueHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+    gap: 12,
+  },
+  leagueBadge: {
+    width: 40,
+    height: 40,
+  },
+  leagueInfo: {
+    alignItems: 'center',
+  },
   leagueTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#FFFFFF',
     textAlign: 'center',
-    marginBottom: 4,
   },
   seasonText: {
     fontSize: 14,
     color: '#FFFFFF',
     opacity: 0.9,
     textAlign: 'center',
-    marginBottom: 24,
   },
   scoreSection: {
     flexDirection: 'row',
@@ -259,6 +356,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     gap: 12,
+  },
+  teamBadge: {
+    width: 56,
+    height: 56,
   },
   teamName: {
     fontSize: 14,

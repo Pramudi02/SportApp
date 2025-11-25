@@ -55,14 +55,19 @@ export default function MatchesScreen({ navigation }) {
         }
       }
       
+      // Remove duplicates based on idEvent
+      const uniqueMatches = Array.from(
+        new Map(allMatches.map(match => [match.idEvent, match])).values()
+      );
+      
       // Sort by date
-      allMatches.sort((a, b) => {
+      uniqueMatches.sort((a, b) => {
         const dateA = new Date(a.dateEvent + ' ' + (a.strTime || '00:00'));
         const dateB = new Date(b.dateEvent + ' ' + (b.strTime || '00:00'));
         return activeTab === 'upcoming' ? dateA - dateB : dateB - dateA;
       });
       
-      setMatches(allMatches);
+      setMatches(uniqueMatches);
     } catch (error) {
       console.error('Error loading matches:', error);
     } finally {
@@ -108,10 +113,20 @@ export default function MatchesScreen({ navigation }) {
     const homeScore = item.intHomeScore || '-';
     const awayScore = item.intAwayScore || '-';
 
+    // Debug log
+    console.log('Match card:', {
+      idEvent: item.idEvent,
+      homeTeam: item.strHomeTeam,
+      awayTeam: item.strAwayTeam
+    });
+
     return (
       <TouchableOpacity
         style={[styles.matchCard, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}
-        onPress={() => navigation.navigate('MatchDetails', { matchId: item.idEvent })}
+        onPress={() => {
+          console.log('Navigating to match:', item.idEvent);
+          navigation.navigate('MatchDetails', { matchId: item.idEvent });
+        }}
         activeOpacity={0.7}
       >
         <View style={styles.matchHeader}>
