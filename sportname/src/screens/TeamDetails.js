@@ -40,7 +40,6 @@ export default function TeamDetails({ route, navigation }) {
           source={{ uri: item.strThumb }}
           style={styles.playerImage}
           resizeMode="cover"
-          onError={(error) => console.log('Player image load error:', error.nativeEvent.error)}
         />
       ) : (
         <View style={[styles.playerImagePlaceholder, { backgroundColor: theme.colors.cardLight }]}>
@@ -89,7 +88,6 @@ export default function TeamDetails({ route, navigation }) {
             source={{ uri: currentTeam.strTeamBadge }}
             style={styles.teamBadge}
             resizeMode="contain"
-            onError={(error) => console.log('Team badge load error:', error.nativeEvent.error)}
           />
         ) : (
           <View style={[styles.teamBadgePlaceholder, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>

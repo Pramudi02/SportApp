@@ -23,13 +23,10 @@ export default function MatchDetailsScreen({ route }) {
   const theme = isDarkMode ? darkTheme : lightTheme;
 
   useEffect(() => {
-    // If match data is passed directly, use it
     if (matchData) {
-      console.log('Using passed match data:', matchData);
       setMatch(matchData);
       setLoading(false);
     } else if (matchId) {
-      // Only fetch if we don't have match data
       loadMatchDetails();
     }
   }, [matchData, matchId]);
@@ -37,9 +34,7 @@ export default function MatchDetailsScreen({ route }) {
   const loadMatchDetails = async () => {
     setLoading(true);
     try {
-      console.log('Loading match details for ID:', matchId);
       const data = await getEventDetails(matchId);
-      console.log('Received match data:', data);
       setMatch(data);
     } catch (error) {
       console.error('Error loading match details:', error);

@@ -113,20 +113,10 @@ export default function MatchesScreen({ navigation }) {
     const homeScore = item.intHomeScore || '-';
     const awayScore = item.intAwayScore || '-';
 
-    // Debug log
-    console.log('Match card:', {
-      idEvent: item.idEvent,
-      homeTeam: item.strHomeTeam,
-      awayTeam: item.strAwayTeam
-    });
-
     return (
       <TouchableOpacity
         style={[styles.matchCard, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}
-        onPress={() => {
-          console.log('Navigating to match:', item.idEvent);
-          navigation.navigate('MatchDetails', { match: item });
-        }}
+        onPress={() => navigation.navigate('MatchDetails', { match: item })}
         activeOpacity={0.7}
       >
         <View style={styles.matchHeader}>

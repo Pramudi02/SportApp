@@ -7,7 +7,6 @@ import { checkAuthStatus } from '../redux/slices/authSlice';
 import { loadFavoritesFromStorage } from '../redux/slices/favoriteSlice';
 import { loadThemeFromStorage } from '../redux/slices/themeSlice';
 
-// Screens
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import HomeScreen from '../screens/HomeScreen';
@@ -24,7 +23,6 @@ import NewsScreen from '../screens/NewsScreen';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Auth Stack
 function AuthStack() {
   return (
     <Stack.Navigator
@@ -38,7 +36,6 @@ function AuthStack() {
   );
 }
 
-// Home Stack
 function HomeStack() {
   return (
     <Stack.Navigator
@@ -86,7 +83,6 @@ function HomeStack() {
   );
 }
 
-// Matches Stack
 function MatchesStack() {
   return (
     <Stack.Navigator
@@ -114,7 +110,6 @@ function MatchesStack() {
   );
 }
 
-// Main Tab Navigator
 function MainTabs() {
   return (
     <Tab.Navigator
@@ -210,17 +205,13 @@ function MainTabs() {
   );
 }
 
-// Main App Navigator
 export default function AppNavigator() {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    // Check if user is already logged in
     dispatch(checkAuthStatus());
-    // Load favorites from storage
     dispatch(loadFavoritesFromStorage());
-    // Load theme preference from storage
     dispatch(loadThemeFromStorage());
   }, [dispatch]);
 

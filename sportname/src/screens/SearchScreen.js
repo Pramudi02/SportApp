@@ -103,7 +103,6 @@ export default function SearchScreen({ navigation }) {
           source={{ uri: item.strThumb }}
           style={styles.playerImage}
           resizeMode="cover"
-          onError={(error) => console.log('Player image load error:', error.nativeEvent.error)}
         />
       ) : (
         <View style={[styles.playerImagePlaceholder, { backgroundColor: theme.colors.cardLight }]}>

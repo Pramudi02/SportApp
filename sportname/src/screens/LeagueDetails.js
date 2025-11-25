@@ -44,7 +44,6 @@ export default function LeagueDetails({ route, navigation }) {
           source={{ uri: item.strTeamBadge }}
           style={styles.teamBadge}
           resizeMode="contain"
-          onError={(error) => console.log('Image load error:', error.nativeEvent.error)}
         />
       ) : (
         <View style={[styles.teamBadgePlaceholder, { backgroundColor: theme.colors.cardLight }]}>

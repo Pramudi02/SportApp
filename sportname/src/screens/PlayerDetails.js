@@ -76,7 +76,6 @@ export default function PlayerDetails({ route }) {
               source={{ uri: currentPlayer.strThumb }}
               style={styles.playerImage}
               resizeMode="cover"
-              onError={(error) => console.log('Player image load error:', error.nativeEvent.error)}
             />
           ) : (
             <View style={[styles.playerImagePlaceholder, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
