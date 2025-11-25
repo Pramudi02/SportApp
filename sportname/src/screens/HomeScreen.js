@@ -10,6 +10,7 @@ import {
   Image,
   ScrollView,
   Linking,
+  ImageBackground,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchLeagues } from '../redux/slices/footballSlice';
@@ -162,12 +163,12 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <LinearGradient
-        colors={[theme.colors.gradient1, theme.colors.gradient2]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+      <ImageBackground
+        source={{ uri: 'https://ik.imagekit.io/pr2222/Portfolio-assets/pngtree-soccer-player-in-action-mixed-media-created-with-generative-ai-technology-image_15990288.jpg' }}
         style={styles.header}
+        imageStyle={styles.headerImage}
       >
+        <View style={styles.headerOverlay}>
         <Text style={styles.headerTitle}>FootyScope</Text>
         <Text style={styles.headerSubtitle}>
           Your ultimate football companion
@@ -201,7 +202,8 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.tabText}>Upcoming Leagues</Text>
           </TouchableOpacity>
         </View>
-      </LinearGradient>
+        </View>
+      </ImageBackground>
 
       <ScrollView
         refreshControl={
@@ -289,8 +291,13 @@ const styles = StyleSheet.create({
   header: {
     padding: 20,
     paddingTop: 60,
+    backgroundColor: 'rgba(15, 39, 68, 1)',
     paddingBottom: 20,
   },
+  headerImage: {
+    opacity: 0.3,
+  },
+
   headerTitle: {
     fontSize: 32,
     fontWeight: 'bold',

@@ -9,6 +9,7 @@ import {
   RefreshControl,
   Image,
   Linking,
+  ImageBackground,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { darkTheme } from '../theme/dark';
@@ -118,16 +119,17 @@ export default function NewsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <LinearGradient
-        colors={[theme.colors.gradient1, theme.colors.gradient2]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+      <ImageBackground
+        source={{ uri: 'https://ik.imagekit.io/pr2222/Portfolio-assets/pngtree-soccer-player-in-action-mixed-media-created-with-generative-ai-technology-image_15990288.jpg' }}
         style={styles.header}
+        imageStyle={styles.headerImage}
       >
+        <View style={styles.headerOverlay}>
         <Feather name="file-text" size={40} color="#FFFFFF" />
         <Text style={styles.headerTitle}>Football News</Text>
         <Text style={styles.headerSubtitle}>Latest updates from around the world</Text>
-      </LinearGradient>
+        </View>
+      </ImageBackground>
 
       {loading && !refreshing ? (
         <View style={styles.loadingContainer}>
@@ -173,8 +175,14 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 20,
-    paddingTop: 60,
+    paddingTop: 30,
+    backgroundColor: 'rgba(15, 39, 68, 1)',
     paddingBottom: 24,
+  },
+  headerImage: {
+    opacity: 0.3,
+  },
+  headerOverlay: {
     alignItems: 'center',
   },
   headerTitle: {

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Image,
+  ImageBackground,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { getEventDetails } from '../api/footballApi';
@@ -82,12 +83,12 @@ export default function MatchDetailsScreen({ route }) {
   return (
     <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       {/* Header */}
-      <LinearGradient
-        colors={[theme.colors.gradient1, theme.colors.gradient2]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+      <ImageBackground
+        source={{ uri: 'https://ik.imagekit.io/pr2222/Portfolio-assets/360_F_652423837_vPI5pp3gSxM6RDiziDUIEpcdOdvi7Fsu.jpg' }}
         style={styles.header}
+        imageStyle={styles.headerImage}
       >
+        <View style={styles.headerOverlay}>
         {/* League Badge and Title */}
         <View style={styles.leagueHeader}>
           {match.strLeagueBadge ? (
@@ -155,7 +156,8 @@ export default function MatchDetailsScreen({ route }) {
             <Text style={styles.teamName}>{match.strAwayTeam}</Text>
           </View>
         </View>
-      </LinearGradient>
+        </View>
+      </ImageBackground>
 
       {/* Match Info */}
       <View style={styles.content}>
@@ -290,8 +292,12 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 20,
-    paddingTop: 20,
-    paddingBottom: 30,
+    paddingTop: 30,
+    backgroundColor: 'rgba(15, 39, 68, 1)',
+    paddingBottom: 20,
+  },
+  headerImage: {
+    opacity: 0.3,
   },
   leagueHeader: {
     flexDirection: 'row',

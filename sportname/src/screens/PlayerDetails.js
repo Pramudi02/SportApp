@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Image,
   TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPlayerDetails } from '../redux/slices/footballSlice';
@@ -55,12 +56,12 @@ export default function PlayerDetails({ route }) {
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <LinearGradient
-        colors={[theme.colors.gradient1, theme.colors.gradient2]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+      <ImageBackground
+        source={{ uri: 'https://ik.imagekit.io/pr2222/Portfolio-assets/soccer-ball-goal-1920x1200-17346.jpg' }}
         style={styles.header}
+        imageStyle={styles.headerImage}
       >
+        <View style={styles.headerOverlay}>
         {/* Favorite button in top-right corner */}
         <TouchableOpacity
           style={[styles.favoriteButton, isFavorite && styles.favoriteButtonActive]}
@@ -89,7 +90,8 @@ export default function PlayerDetails({ route }) {
             )}
           </View>
         </View>
-      </LinearGradient>
+        </View>
+      </ImageBackground>
 
       <View style={[styles.infoSection, { backgroundColor: theme.colors.card }]}>
         {currentPlayer.strTeam && (
@@ -165,7 +167,14 @@ const styles = StyleSheet.create({
   header: {
     padding: 24,
     paddingTop: 20,
+    backgroundColor: 'rgba(15, 39, 68, 1)',
     position: 'relative',
+  },
+  headerImage: {
+    opacity: 0.3,
+  },
+  headerOverlay: {
+    borderRadius: 16,
   },
   headerContent: {
     flexDirection: 'row',

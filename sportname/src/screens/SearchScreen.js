@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  ImageBackground,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { searchPlayers } from '../api/footballApi';
@@ -154,18 +155,19 @@ export default function SearchScreen({ navigation }) {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <LinearGradient
-        colors={[theme.colors.gradient1, theme.colors.gradient2]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+      <ImageBackground
+        source={{ uri: 'https://ik.imagekit.io/pr2222/Portfolio-assets/61KtpeMt7oL._AC_UF894,1000_QL80_.jpg' }}
         style={styles.header}
+        imageStyle={styles.headerImage}
       >
-        <Feather name="search" size={40} color="#fff" />
-        <Text style={styles.headerTitle}>Search Players</Text>
-        <Text style={styles.headerSubtitle}>
-          {players.length} players available
-        </Text>
-      </LinearGradient>
+        <View style={styles.headerOverlay}>
+          <Feather name="search" size={40} color="#fff" />
+          <Text style={styles.headerTitle}>Search Players</Text>
+          <Text style={styles.headerSubtitle}>
+            {players.length} players available
+          </Text>
+        </View>
+      </ImageBackground>
 
       <View style={[styles.searchContainer, { backgroundColor: theme.colors.card }]}>
         <Feather name="search" size={20} color={theme.colors.textSecondary} style={styles.searchIcon} />
@@ -226,6 +228,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: 'center',
     marginBottom: 8,
+    padding: 24,
+    paddingTop: 20,
+    backgroundColor: 'rgba(15, 39, 68, 1)',
+    position: 'relative',
+  },
+  headerImage: {
+    opacity: 0.3,
+  },
+  headerOverlay: {
+    borderRadius: 16,
+    alignItems: 'center',
   },
   headerTitle: {
     fontSize: 24,

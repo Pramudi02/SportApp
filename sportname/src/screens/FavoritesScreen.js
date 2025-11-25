@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  ImageBackground,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleFavorite } from '../redux/slices/favoriteSlice';
@@ -69,18 +70,19 @@ export default function FavoritesScreen({ navigation }) {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <LinearGradient
-        colors={[theme.colors.gradient1, theme.colors.gradient2]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+      <ImageBackground
+        source={{ uri: 'https://ik.imagekit.io/pr2222/Portfolio-assets/soccer-ball-goal-1920x1200-17346.jpg' }}
         style={styles.header}
+        imageStyle={styles.headerImage}
       >
-        <Feather name="star" size={32} color="#FFFFFF" style={{ marginBottom: 8 }} />
-        <Text style={styles.headerTitle}>My Favorites</Text>
-        <Text style={styles.headerSubtitle}>
-          {favorites.length} player{favorites.length !== 1 ? 's' : ''} saved
-        </Text>
-      </LinearGradient>
+        <View style={styles.headerOverlay}>
+          <Feather name="star" size={32} color="#FFFFFF" style={{ marginBottom: 8 }} />
+          <Text style={styles.headerTitle}>My Favorites</Text>
+          <Text style={styles.headerSubtitle}>
+            {favorites.length} player{favorites.length !== 1 ? 's' : ''} saved
+          </Text>
+        </View>
+      </ImageBackground>
 
       {favorites.length === 0 ? (
         <View style={styles.emptyContainer}>
@@ -117,6 +119,17 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 60,
     paddingBottom: 30,
+    alignItems: 'center',
+    padding: 24,
+    paddingTop: 20,
+    backgroundColor: 'rgba(15, 39, 68, 1)',
+    position: 'relative',
+  },
+  headerImage: {
+    opacity: 0.3,
+  },
+  headerOverlay: {
+    borderRadius: 16,
     alignItems: 'center',
   },
   headerTitle: {

@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   ScrollView,
+  ImageBackground,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { getNextEventsByLeague, getLastEventsByLeague } from '../api/footballApi';
@@ -188,12 +189,12 @@ export default function MatchesScreen({ navigation }) {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <LinearGradient
-        colors={[theme.colors.gradient1, theme.colors.gradient2]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+      <ImageBackground
+        source={{ uri: 'https://ik.imagekit.io/pr2222/Portfolio-assets/61KtpeMt7oL._AC_UF894,1000_QL80_.jpg' }}
         style={styles.header}
+        imageStyle={styles.headerImage}
       >
+        <View style={styles.headerOverlay}>
         <Feather name="activity" size={40} color="#FFFFFF" />
         <Text style={styles.headerTitle}>Matches</Text>
         <Text style={styles.headerSubtitle}>
@@ -228,7 +229,8 @@ export default function MatchesScreen({ navigation }) {
             <Text style={styles.tabText}>Recent</Text>
           </TouchableOpacity>
         </View>
-      </LinearGradient>
+        </View>
+      </ImageBackground>
 
       {loading ? (
         <View style={styles.loadingContainer}>
@@ -276,6 +278,13 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 60,
     paddingBottom: 20,
+    backgroundColor: 'rgba(15, 39, 68, 1)',
+  },
+  headerImage: {
+    opacity: 0.3,
+  },
+  headerOverlay: {
+    borderRadius: 16,
     alignItems: 'center',
   },
   headerTitle: {

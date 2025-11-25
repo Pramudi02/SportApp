@@ -7,6 +7,7 @@ import {
   ScrollView,
   Alert,
   Switch,
+  ImageBackground,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../redux/slices/authSlice';
@@ -50,26 +51,27 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <LinearGradient
-        colors={[theme.colors.gradient1, theme.colors.gradient2]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+      <ImageBackground
+        source={{ uri: 'https://ik.imagekit.io/pr2222/Portfolio-assets/pngtree-computer-lighting-technology-theme-user-link-intelligent-background-image_905379.png' }}
         style={styles.header}
+        imageStyle={styles.headerImage}
       >
-        <View style={styles.avatarContainer}>
-          <Text style={styles.avatarText}>
-            {user?.firstName?.charAt(0) || user?.username?.charAt(0) || 'U'}
+        <View style={styles.headerOverlay}>
+          <View style={styles.avatarContainer}>
+            <Text style={styles.avatarText}>
+              {user?.firstName?.charAt(0) || user?.username?.charAt(0) || 'U'}
+            </Text>
+          </View>
+          <Text style={styles.name}>
+            {user?.firstName && user?.lastName
+              ? `${user.firstName} ${user.lastName}`
+              : user?.username || 'User'}
           </Text>
+          {user?.email && (
+            <Text style={styles.email}>{user.email}</Text>
+          )}
         </View>
-        <Text style={styles.name}>
-          {user?.firstName && user?.lastName
-            ? `${user.firstName} ${user.lastName}`
-            : user?.username || 'User'}
-        </Text>
-        {user?.email && (
-          <Text style={styles.email}>{user.email}</Text>
-        )}
-      </LinearGradient>
+      </ImageBackground>
 
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Account Information</Text>
@@ -167,6 +169,17 @@ const styles = StyleSheet.create({
     padding: 32,
     paddingTop: 60,
     paddingBottom: 40,
+    padding: 24,
+    paddingTop: 20,
+    backgroundColor: 'rgba(15, 39, 68, 1)',
+    position: 'relative',
+  },
+  headerImage: {
+    opacity: 0.3,
+  },
+  headerOverlay: {
+    borderRadius: 16,
+    alignItems: 'center',
   },
   avatarContainer: {
     width: 100,
