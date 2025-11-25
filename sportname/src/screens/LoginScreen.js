@@ -124,12 +124,6 @@ export default function LoginScreen({ navigation }) {
               Don't have an account? <Text style={{ fontWeight: 'bold' }}>Register</Text>
             </Text>
           </TouchableOpacity>
-
-          <View style={[styles.demoContainer, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
-            <Feather name="info" size={20} color={theme.colors.info} style={{ marginBottom: 8}} />
-            <Text style={[styles.demoText, { color: theme.colors.textSecondary }]}>Demo credentials:</Text>
-            <Text style={[styles.demoText, { color: theme.colors.text, fontWeight: '600' }]}>emilys / emilyspass</Text>
-          </View>
         </View>
         </View>
         </KeyboardAvoidingView>
@@ -238,22 +232,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 8,
     textAlign: 'center',
-  },
-  demoContainer: {
-    marginTop: 40,
-    padding: 20,
-    borderRadius: 12,
-    borderWidth: 1,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  demoText: {
-    fontSize: 13,
-    textAlign: 'center',
-    marginBottom: 4,
   },
 });
