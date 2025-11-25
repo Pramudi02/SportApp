@@ -44,9 +44,10 @@ export default function SearchScreen({ navigation }) {
         }
       }
       
-      // Remove duplicates based on player ID
+      // Filter for football/soccer players only and remove duplicates
       const uniquePlayers = allPlayers.filter(
         (player, index, self) =>
+          (player.strSport === 'Soccer' || player.strSport === 'Football') &&
           index === self.findIndex((p) => p.idPlayer === player.idPlayer)
       );
       
